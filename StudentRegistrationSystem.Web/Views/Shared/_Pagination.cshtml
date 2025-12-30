@@ -7,7 +7,7 @@
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
     var area = ViewContext.RouteData.Values["area"]?.ToString();
     
-    // Get current query parameters to preserve them
+    
     var queryParams = new Dictionary<string, string>();
     foreach (var key in Context.Request.Query.Keys)
     {

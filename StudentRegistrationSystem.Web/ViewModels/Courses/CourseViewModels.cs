@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using StudentRegistrationSystem.Domain.Common;
 
 namespace StudentRegistrationSystem.Web.ViewModels.Courses;
 
@@ -23,6 +24,6 @@ public class CourseViewModel
 
 public class BrowseCoursesViewModel
 {
-    public IEnumerable<CourseViewModel> AvailableCourses { get; set; } = new List<CourseViewModel>();
+    public PagedResult<CourseViewModel> AvailableCourses { get; set; } = new PagedResult<CourseViewModel>();
     public IEnumerable<CourseViewModel> RegisteredCourses { get; set; } = new List<CourseViewModel>();
 }

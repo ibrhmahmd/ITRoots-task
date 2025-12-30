@@ -9,12 +9,26 @@
                 <h4 class="mb-0">Email Sent</h4>
             </div>
             <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-envelope-check" style="font-size: 3rem; color: #28a745;"></i>
+                </div>
+                <h5 class="mb-3">Verification Email Sent!</h5>
                 <p class="mb-3">A verification email has been sent to your email address.</p>
-                <p class="text-muted">Please check your inbox and click the verification link to activate your account.</p>
+                <p class="text-muted small mb-3">
+                    Please check your inbox (and spam folder) and click the verification link to activate your account.
+                </p>
+                <p class="text-muted small">
+                    <strong>Important:</strong> You must verify your email before you can log in.
+                </p>
                 
                 <hr class="my-4" />
                 
-                <a asp-action="Login" class="btn btn-primary">Back to Login</a>
+                <div class="d-grid gap-2">
+                    <a asp-action="Login" class="btn btn-primary">Go to Login</a>
+                    <p class="text-muted small mt-2 mb-0">
+                        Didn't receive the email? Check your spam folder or contact support.
+                    </p>
+                </div>
             </div>
         </div>
     </div>

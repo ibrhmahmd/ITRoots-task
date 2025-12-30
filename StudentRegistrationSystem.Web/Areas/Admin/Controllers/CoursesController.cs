@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentRegistrationSystem.Core.Interfaces;
 using StudentRegistrationSystem.Core.Exceptions;
+using StudentRegistrationSystem.Domain.Common;
 using StudentRegistrationSystem.Domain.Enums;
 using StudentRegistrationSystem.Web.ViewModels.Courses;
 
@@ -19,10 +20,16 @@ public class CoursesController : Controller
         _courseService = courseService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
     {
-        var courses = await _courseService.GetAllAsync();
-        return View(courses);
+        var parameters = new PaginationParameters
+        {
+            PageNumber = page,
+            PageSize = pageSize
+        };
+
+        var result = await _courseService.GetAllPagedAsync(parameters);
+        return View(result);
     }
 
     [HttpGet]
