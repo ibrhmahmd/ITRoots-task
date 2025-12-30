@@ -1,15 +1,30 @@
 @using StudentRegistrationSystem.Web.ViewModels.Courses
+@using StudentRegistrationSystem.Domain.Common
 @model BrowseCoursesViewModel
 
 @{
     ViewData["Title"] = "Browse Courses";
+    var pageSize = Model.AvailableCourses.PageSize;
 }
 
 <h2 class="mb-4">Course Registration</h2>
 
 <div class="row">
     <div class="col-md-8">
-        <h4>Available Courses</h4>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Available Courses</h4>
+            <div>
+                <form method="get" class="d-inline-flex align-items-center">
+                    <label for="pageSize" class="me-2 small">Show:</label>
+                    <select name="pageSize" id="pageSize" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                        <option value="10" selected="@(pageSize == 10)">10</option>
+                        <option value="25" selected="@(pageSize == 25)">25</option>
+                        <option value="50" selected="@(pageSize == 50)">50</option>
+                    </select>
+                    <input type="hidden" name="page" value="1" />
+                </form>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover border">
                 <thead class="table-light">
@@ -21,7 +36,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var course in Model.AvailableCourses)
+                    @foreach (var course in Model.AvailableCourses.Items)
                     {
                         <tr>
                             <td>@course.CourseCode</td>
@@ -38,6 +53,21 @@
                 </tbody>
             </table>
         </div>
+        
+        @* Pagination for Available Courses *@
+        @if (Model.AvailableCourses.TotalPages > 1)
+        {
+            <div class="mt-3">
+                @await Html.PartialAsync("_Pagination", (IPagedResult)Model.AvailableCourses)
+            </div>
+        }
+        
+        @if (!Model.AvailableCourses.Items.Any())
+        {
+            <div class="alert alert-info mt-3">
+                <p class="mb-0">No available courses found.</p>
+            </div>
+        }
     </div>
     
     <div class="col-md-4">

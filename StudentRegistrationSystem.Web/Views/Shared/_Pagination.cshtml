@@ -1,0 +1,129 @@
+@using StudentRegistrationSystem.Domain.Common
+@model IPagedResult
+
+@if (Model != null && Model.TotalPages > 1)
+{
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
+    var area = ViewContext.RouteData.Values["area"]?.ToString();
+    
+    // Get current query parameters to preserve them
+    var queryParams = new Dictionary<string, string>();
+    foreach (var key in Context.Request.Query.Keys)
+    {
+        if (key != "page")
+        {
+            queryParams[key] = Context.Request.Query[key].ToString();
+        }
+    }
+    
+    // Build route values
+    var routeValues = new Dictionary<string, string>();
+    foreach (var param in queryParams)
+    {
+        routeValues[param.Key] = param.Value;
+    }
+    
+    // Calculate page range to display (show max 5 page numbers)
+    var startPage = Math.Max(1, Model.PageNumber - 2);
+    var endPage = Math.Min(Model.TotalPages, Model.PageNumber + 2);
+    
+    if (endPage - startPage < 4)
+    {
+        if (startPage == 1)
+            endPage = Math.Min(5, Model.TotalPages);
+        else if (endPage == Model.TotalPages)
+            startPage = Math.Max(1, Model.TotalPages - 4);
+    }
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            @* Previous Button *@
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                @if (Model.HasPreviousPage)
+                {
+                    routeValues["page"] = (Model.PageNumber - 1).ToString();
+                    routeValues["pageSize"] = Model.PageSize.ToString();
+                    <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                }
+                else
+                {
+                    <span class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </span>
+                }
+            </li>
+
+            @* First Page *@
+            @if (startPage > 1)
+            {
+                routeValues["page"] = "1";
+                routeValues["pageSize"] = Model.PageSize.ToString();
+                <li class="page-item">
+                    <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues">1</a>
+                </li>
+                @if (startPage > 2)
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                }
+            }
+
+            @* Page Numbers *@
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                var pageNum = i;
+                routeValues["page"] = pageNum.ToString();
+                routeValues["pageSize"] = Model.PageSize.ToString();
+                <li class="page-item @(pageNum == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues">@pageNum</a>
+                </li>
+            }
+
+            @* Last Page *@
+            @if (endPage < Model.TotalPages)
+            {
+                @if (endPage < Model.TotalPages - 1)
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                }
+                routeValues["page"] = Model.TotalPages.ToString();
+                routeValues["pageSize"] = Model.PageSize.ToString();
+                <li class="page-item">
+                    <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues">@Model.TotalPages</a>
+                </li>
+            }
+
+            @* Next Button *@
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                @if (Model.HasNextPage)
+                {
+                    routeValues["page"] = (Model.PageNumber + 1).ToString();
+                    routeValues["pageSize"] = Model.PageSize.ToString();
+                    <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                }
+                else
+                {
+                    <span class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </span>
+                }
+            </li>
+        </ul>
+    </nav>
+
+    @* Page Info *@
+    <div class="text-center mt-2">
+        <small class="text-muted">
+            Showing @Model.StartRecord to @Model.EndRecord of @Model.TotalCount entries
+            <span>(Page @Model.PageNumber of @Model.TotalPages)</span>
+        </small>
+    </div>
+}
