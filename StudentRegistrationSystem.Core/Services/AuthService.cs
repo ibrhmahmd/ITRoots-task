@@ -1,9 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using StudentRegistrationSystem.Core.DTOs;
 using StudentRegistrationSystem.Core.Exceptions;
 using StudentRegistrationSystem.Core.Helpers;
 using StudentRegistrationSystem.Core.Interfaces;
+using StudentRegistrationSystem.Domain.Common;
 using StudentRegistrationSystem.Domain.Entities;
 using StudentRegistrationSystem.Domain.Enums;
 using StudentRegistrationSystem.Domain.Interfaces.Repositories;
@@ -16,17 +18,22 @@ public class AuthService : IAuthService
     private readonly IStudentRepository _studentRepository;
     private readonly IPasswordService _passwordService;
     private readonly IEmailService _emailService;
+    private readonly string _baseUrl;
 
     public AuthService(
         IUserRepository userRepository,
         IStudentRepository studentRepository,
         IPasswordService passwordService,
-        IEmailService emailService)
+        IEmailService emailService,
+        IConfiguration configuration)
     {
         _userRepository = userRepository;
         _studentRepository = studentRepository;
         _passwordService = passwordService;
         _emailService = emailService;
+        
+        var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
+        _baseUrl = appSettings?.BaseUrl ?? "https://localhost:5001";
     }
 
     public async Task<UserDto> RegisterAsync(string fullName, string username, string password, string email, string? phone, int? academicYear)
@@ -135,11 +142,9 @@ public class AuthService : IAuthService
             return true;
         }
 
-        // Generate token and send email
         var token = await _passwordService.GeneratePasswordResetTokenAsync(user.Id);
         
-        // this will be a full URL to the reset page
-        var resetLink = $"/Account/ResetPassword?token={token}";
+        var resetLink = $"{_baseUrl.TrimEnd('/')}/Account/ResetPassword?token={token}";
         
         return await _emailService.SendPasswordResetEmailAsync(user.Email, user.Username, resetLink);
     }

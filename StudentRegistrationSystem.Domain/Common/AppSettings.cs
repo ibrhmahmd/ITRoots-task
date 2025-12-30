@@ -27,6 +27,8 @@ public class AppSettings
     /// </summary>
     public List<string> SupportedLanguages { get; set; } = new() { "en", "ar" };
 
+    public string BaseUrl { get; set; } = "https://localhost:5001";
+
     /// <summary>
     /// Email settings
     /// </summary>
