@@ -1,4 +1,39 @@
-@* Placeholder for Courses Details View *@
+@using StudentRegistrationSystem.Core.DTOs
+@model CourseDto
 
+@{
+    ViewData["Title"] = "Course Details";
+}
 
+<h2>@Model.CourseName</h2>
+<hr />
 
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">@Model.CourseCode - @Model.CourseName</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Course Code:</dt>
+            <dd class="col-sm-9">@Model.CourseCode</dd>
+
+            <dt class="col-sm-3">Course Name:</dt>
+            <dd class="col-sm-9">@Model.CourseName</dd>
+
+            <dt class="col-sm-3">Description:</dt>
+            <dd class="col-sm-9">@(Model.Description ?? "N/A")</dd>
+
+            <dt class="col-sm-3">Credits:</dt>
+            <dd class="col-sm-9">@Model.Credits</dd>
+
+            <dt class="col-sm-3">Semester:</dt>
+            <dd class="col-sm-9">@Model.Semester</dd>
+
+            <dt class="col-sm-3">Semester Year:</dt>
+            <dd class="col-sm-9">@Model.SemesterYear</dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-secondary">Back to Courses</a>
+    </div>
+</div>

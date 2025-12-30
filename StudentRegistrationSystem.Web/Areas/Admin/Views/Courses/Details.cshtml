@@ -1,0 +1,89 @@
+@model CourseDetailsViewModel
+
+@{
+    ViewData["Title"] = "Course Details";
+}
+
+<h2>Course Details</h2>
+<hr />
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">@Model.Course.CourseCode - @Model.Course.CourseName</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Course ID:</dt>
+            <dd class="col-sm-9">@Model.Course.Id</dd>
+
+            <dt class="col-sm-3">Course Code:</dt>
+            <dd class="col-sm-9">@Model.Course.CourseCode</dd>
+
+            <dt class="col-sm-3">Course Name:</dt>
+            <dd class="col-sm-9">@Model.Course.CourseName</dd>
+
+            @if (!string.IsNullOrEmpty(Model.Course.CourseNameAr))
+            {
+                <dt class="col-sm-3">Course Name (Arabic):</dt>
+                <dd class="col-sm-9">@Model.Course.CourseNameAr</dd>
+            }
+
+            <dt class="col-sm-3">Description:</dt>
+            <dd class="col-sm-9">@(Model.Course.Description ?? "N/A")</dd>
+
+            @if (!string.IsNullOrEmpty(Model.Course.DescriptionAr))
+            {
+                <dt class="col-sm-3">Description (Arabic):</dt>
+                <dd class="col-sm-9">@Model.Course.DescriptionAr</dd>
+            }
+
+            <dt class="col-sm-3">Credits:</dt>
+            <dd class="col-sm-9">@Model.Course.Credits</dd>
+
+            <dt class="col-sm-3">Semester:</dt>
+            <dd class="col-sm-9">@Model.Course.Semester</dd>
+
+            <dt class="col-sm-3">Semester Year:</dt>
+            <dd class="col-sm-9">@Model.Course.SemesterYear</dd>
+
+            @if (Model.Course.SemesterStartDate.HasValue)
+            {
+                <dt class="col-sm-3">Semester Start Date:</dt>
+                <dd class="col-sm-9">@Model.Course.SemesterStartDate.Value.ToString("MM/dd/yyyy")</dd>
+            }
+
+            <dt class="col-sm-3">Max Capacity:</dt>
+            <dd class="col-sm-9">@(Model.Course.MaxCapacity?.ToString() ?? "Unlimited")</dd>
+
+            <dt class="col-sm-3">Status:</dt>
+            <dd class="col-sm-9">
+                @if (Model.Course.IsActive)
+                {
+                    <span class="badge bg-success">Active</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Inactive</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">Created At:</dt>
+            <dd class="col-sm-9">@Model.Course.CreatedAt.ToString("MM/dd/yyyy HH:mm")</dd>
+
+            @if (Model.Course.UpdatedAt.HasValue)
+            {
+                <dt class="col-sm-3">Updated At:</dt>
+                <dd class="col-sm-9">@Model.Course.UpdatedAt.Value.ToString("MM/dd/yyyy HH:mm")</dd>
+            }
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.Course.Id" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a asp-action="Delete" asp-route-id="@Model.Course.Id" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Delete
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
