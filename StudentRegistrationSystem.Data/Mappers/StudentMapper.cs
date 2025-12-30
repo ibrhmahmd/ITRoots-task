@@ -5,22 +5,14 @@ using StudentRegistrationSystem.Domain.Enums;
 
 namespace StudentRegistrationSystem.Data.Mappers;
 
-/// <summary>
-/// Mapper for Student entity using Dapper
-/// </summary>
+
 public static class StudentMapper
 {
-    /// <summary>
-    /// Configures Dapper type mapping for Student entity
-    /// </summary>
     public static void Configure()
     {
         SqlMapper.AddTypeHandler(new AcademicYearTypeHandler());
     }
 
-    /// <summary>
-    /// Maps database row to Student entity
-    /// </summary>
     public static Student Map(dynamic row)
     {
         return new Student
@@ -37,9 +29,6 @@ public static class StudentMapper
     }
 }
 
-/// <summary>
-/// Type handler for AcademicYear enum
-/// </summary>
 public class AcademicYearTypeHandler : Dapper.SqlMapper.TypeHandler<AcademicYear>
 {
     public override void SetValue(System.Data.IDbDataParameter parameter, AcademicYear value)

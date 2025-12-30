@@ -5,25 +5,16 @@ using StudentRegistrationSystem.Domain.Enums;
 
 namespace StudentRegistrationSystem.Data.Mappers;
 
-/// <summary>
-/// Mapper for Course entity using Dapper
-/// </summary>
 public static class CourseMapper
 {
-    /// <summary>
-    /// Configures Dapper type mapping for Course entity
-    /// </summary>
     public static void Configure()
     {
         SqlMapper.AddTypeHandler(new SemesterTypeHandler());
     }
 
-    /// <summary>
-    /// Maps database row to Course entity
-    /// </summary>
+
     public static Course Map(dynamic row)
     {
-        // Map Semester int to enum
         Semester semester = row.Semester switch
         {
             1 => Semester.Fall,
@@ -52,9 +43,6 @@ public static class CourseMapper
     }
 }
 
-/// <summary>
-/// Type handler for Semester enum
-/// </summary>
 public class SemesterTypeHandler : Dapper.SqlMapper.TypeHandler<Semester>
 {
     public override void SetValue(System.Data.IDbDataParameter parameter, Semester value)

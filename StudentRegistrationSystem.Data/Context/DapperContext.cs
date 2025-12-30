@@ -5,9 +5,6 @@ using Microsoft.Extensions.Configuration;
 
 namespace StudentRegistrationSystem.Data.Context;
 
-/// <summary>
-/// Implementation of IDbConnectionFactory using SQL Server
-/// </summary>
 public class DapperContext : IDbConnectionFactory
 {
     private readonly string _connectionString;

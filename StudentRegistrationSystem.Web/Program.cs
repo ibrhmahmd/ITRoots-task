@@ -10,7 +10,12 @@ using StudentRegistrationSystem.Web.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization();
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -51,7 +56,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCustomRequestLogging();
 app.UseRouting();
-app.UseCustomLocalization();
 app.ConfigureLocalization();
 app.UseAuthentication();
 app.UseAuthorization();

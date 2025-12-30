@@ -5,22 +5,14 @@ using StudentRegistrationSystem.Domain.Enums;
 
 namespace StudentRegistrationSystem.Data.Mappers;
 
-/// <summary>
-/// Mapper for User entity using Dapper
-/// </summary>
 public static class UserMapper
 {
-    /// <summary>
-    /// Configures Dapper type mapping for User entity
-    /// </summary>
     public static void Configure()
     {
         SqlMapper.AddTypeHandler(new UserRoleTypeHandler());
     }
 
-    /// <summary>
-    /// Maps database row to User entity
-    /// </summary>
+    
     public static User Map(dynamic row)
     {
         return new User

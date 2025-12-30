@@ -10,9 +10,6 @@ using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
 namespace StudentRegistrationSystem.Data.Repositories;
 
-/// <summary>
-/// Repository implementation for Student entity using Dapper
-/// </summary>
 public class StudentRepository : BaseRepository, IStudentRepository
 {
     public StudentRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
