@@ -23,12 +23,12 @@ public static class CourseMapper
     /// </summary>
     public static Course Map(dynamic row)
     {
-        // Map Semester string to enum
-        Semester semester = row.Semester?.ToString() switch
+        // Map Semester int to enum
+        Semester semester = row.Semester switch
         {
-            "Fall" => Semester.Fall,
-            "Spring" => Semester.Spring,
-            "Summer" => Semester.Summer,
+            1 => Semester.Fall,
+            2 => Semester.Spring,
+            3 => Semester.Summer,
             _ => Semester.Fall
         };
 
@@ -59,23 +59,18 @@ public class SemesterTypeHandler : Dapper.SqlMapper.TypeHandler<Semester>
 {
     public override void SetValue(System.Data.IDbDataParameter parameter, Semester value)
     {
-        parameter.Value = value switch
-        {
-            Semester.Fall => "Fall",
-            Semester.Spring => "Spring",
-            Semester.Summer => "Summer",
-            _ => "Fall"
-        };
+        parameter.Value = (int)value;
     }
 
     public override Semester Parse(object value)
     {
-        return value?.ToString() switch
+        if (value == null || value == DBNull.Value) return Semester.Fall;
+        
+        if (int.TryParse(value.ToString(), out int intValue))
         {
-            "Fall" => Semester.Fall,
-            "Spring" => Semester.Spring,
-            "Summer" => Semester.Summer,
-            _ => Semester.Fall
-        };
+            return (Semester)intValue;
+        }
+
+        return Semester.Fall;
     }
 }
