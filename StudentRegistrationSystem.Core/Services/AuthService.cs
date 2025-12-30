@@ -138,7 +138,7 @@ public class AuthService : IAuthService
         // Generate token and send email
         var token = await _passwordService.GeneratePasswordResetTokenAsync(user.Id);
         
-        // In a real app, this would be a full URL to the reset page
+        // this will be a full URL to the reset page
         var resetLink = $"/Account/ResetPassword?token={token}";
         
         return await _emailService.SendPasswordResetEmailAsync(user.Email, user.Username, resetLink);

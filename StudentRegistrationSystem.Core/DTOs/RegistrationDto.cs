@@ -2,9 +2,6 @@ using System;
 
 namespace StudentRegistrationSystem.Core.DTOs;
 
-/// <summary>
-/// Data Transfer Object for Registration entity
-/// </summary>
 public class RegistrationDto
 {
     public string Id { get; set; } = string.Empty;
@@ -16,7 +13,7 @@ public class RegistrationDto
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     
-    // Navigation properties (optional, populated when needed)
+    // Navigation properties 
     public StudentDto? Student { get; set; }
     public CourseDto? Course { get; set; }
 }
