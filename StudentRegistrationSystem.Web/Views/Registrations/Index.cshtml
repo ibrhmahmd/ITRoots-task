@@ -1,11 +1,13 @@
 @using StudentRegistrationSystem.Web.ViewModels.Registrations
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> Localizer
 @model MyCoursesViewModel
 
 @{
-    ViewData["Title"] = "My Courses";
+    ViewData["Title"] = Localizer["MyCoursesTitle"];
 }
 
-<h2 class="mb-4">My Registered Courses</h2>
+<h2 class="mb-4">@Localizer["MyRegisteredCourses"]</h2>
 
 @if (Model.Registrations.Any())
 {
@@ -13,11 +15,11 @@
         <table class="table table-hover">
             <thead class="table-light">
                 <tr>
-                    <th>Course Code</th>
-                    <th>Course Name</th>
-                    <th>Credits</th>
-                    <th>Registration Date</th>
-                    <th>Status</th>
+                    <th>@Localizer["CourseCode"]</th>
+                    <th>@Localizer["CourseName"]</th>
+                    <th>@Localizer["Credits"]</th>
+                    <th>@Localizer["RegistrationDate"]</th>
+                    <th>@Localizer["Status"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,7 +31,7 @@
                         <td>@registration.Credits</td>
                         <td>@registration.RegistrationDate.ToString("MM/dd/yyyy")</td>
                         <td>
-                            <span class="badge bg-success">@registration.Status</span>
+                            <span class="badge bg-success">@Localizer["Active"]</span>
                         </td>
                     </tr>
                 }
@@ -40,7 +42,7 @@
 else
 {
     <div class="alert alert-info">
-        <p>You haven't registered for any courses yet.</p>
-        <a asp-action="Index" asp-controller="Courses" class="btn btn-primary">Browse Courses</a>
+        <p>@Localizer["NoCoursesRegistered"]</p>
+        <a asp-action="Index" asp-controller="Courses" class="btn btn-primary">@Localizer["BrowseCoursesAction"]</a>
     </div>
 }

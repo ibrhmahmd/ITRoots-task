@@ -58,7 +58,7 @@
         @if (Model.AvailableCourses.TotalPages > 1)
         {
             <div class="mt-3">
-                @await Html.PartialAsync("_Pagination", (IPagedResult)Model.AvailableCourses)
+                @await Html.PartialAsync("_Pagination", Model.AvailableCourses)
             </div>
         }
         

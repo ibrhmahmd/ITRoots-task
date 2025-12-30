@@ -1,37 +1,39 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> Localizer
 @model StudentRegistrationSystem.Web.ViewModels.Account.VerifyEmailViewModel
 
 @{
-    ViewData["Title"] = "Verify Email";
+    ViewData["Title"] = Localizer["VerifyEmailTitle"];
 }
 
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white text-center">
-                <h4 class="mb-0">Verify Email</h4>
+                <h4 class="mb-0">@Localizer["VerifyEmailHeader"]</h4>
             </div>
             <div class="card-body">
-                <p class="text-muted">Enter the verification token sent to your email address.</p>
+                <p class="text-muted">@Localizer["EnterVerificationToken"]</p>
 
                 <form asp-action="VerifyEmail" method="post">
                     <input type="hidden" asp-for="Token" />
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="mb-3">
-                        <label asp-for="Token" class="form-label">Verification Token</label>
+                        <label asp-for="Token" class="form-label">@Localizer["VerificationToken"]</label>
                         <input asp-for="Token" class="form-control" />
                         <span asp-validation-for="Token" class="text-danger"></span>
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Verify Email</button>
+                        <button type="submit" class="btn btn-primary">@Localizer["VerifyEmailButton"]</button>
                     </div>
                 </form>
 
                 <hr class="my-4" />
 
                 <div class="text-center">
-                    <a asp-action="Login" class="text-decoration-none">Back to Login</a>
+                    <a asp-action="Login" class="text-decoration-none">@Localizer["BackToLogin"]</a>
                 </div>
             </div>
         </div>

@@ -1,10 +1,10 @@
 @model CreateCourseViewModel
 
 @{
-    ViewData["Title"] = "Create Course";
+    ViewData["Title"] = Localizer["CreateCourse"];
 }
 
-<h2>Create New Course</h2>
+<h2>@Localizer["CreateNewCourse"]</h2>
 <hr />
 
 <div class="row">
@@ -14,78 +14,78 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label asp-for="CourseCode" class="form-label"></label>
+                    <label asp-for="CourseCode" class="form-label">@Localizer["CourseCode"]</label>
                     <input asp-for="CourseCode" class="form-control" />
                     <span asp-validation-for="CourseCode" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label asp-for="Credits" class="form-label"></label>
+                    <label asp-for="Credits" class="form-label">@Localizer["Credits"]</label>
                     <input asp-for="Credits" class="form-control" type="number" min="1" max="10" />
                     <span asp-validation-for="Credits" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label asp-for="CourseName" class="form-label"></label>
+                <label asp-for="CourseName" class="form-label">@Localizer["CourseName"]</label>
                 <input asp-for="CourseName" class="form-control" />
                 <span asp-validation-for="CourseName" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="CourseNameAr" class="form-label"></label>
+                <label asp-for="CourseNameAr" class="form-label">@Localizer["CourseNameAr"]</label>
                 <input asp-for="CourseNameAr" class="form-control" />
                 <span asp-validation-for="CourseNameAr" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Description" class="form-label"></label>
+                <label asp-for="Description" class="form-label">@Localizer["CourseDescription"]</label>
                 <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="DescriptionAr" class="form-label"></label>
+                <label asp-for="DescriptionAr" class="form-label">@Localizer["DescriptionAr"]</label>
                 <textarea asp-for="DescriptionAr" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="DescriptionAr" class="text-danger"></span>
             </div>
 
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <label asp-for="Semester" class="form-label"></label>
+                    <label asp-for="Semester" class="form-label">@Localizer["Semester"]</label>
                     <select asp-for="Semester" class="form-select">
-                        <option value="1">Fall</option>
-                        <option value="2">Spring</option>
-                        <option value="3">Summer</option>
+                        <option value="1">@Localizer["Fall"]</option>
+                        <option value="2">@Localizer["Spring"]</option>
+                        <option value="3">@Localizer["Summer"]</option>
                     </select>
                     <span asp-validation-for="Semester" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label asp-for="SemesterYear" class="form-label"></label>
+                    <label asp-for="SemesterYear" class="form-label">@Localizer["Year"]</label>
                     <input asp-for="SemesterYear" class="form-control" type="number" />
                     <span asp-validation-for="SemesterYear" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label asp-for="SemesterStartDate" class="form-label"></label>
+                    <label asp-for="SemesterStartDate" class="form-label">@Localizer["SemesterStartDate"]</label>
                     <input asp-for="SemesterStartDate" class="form-control" type="date" />
                     <span asp-validation-for="SemesterStartDate" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label asp-for="MaxCapacity" class="form-label"></label>
+                <label asp-for="MaxCapacity" class="form-label">@Localizer["MaxCapacity"]</label>
                 <input asp-for="MaxCapacity" class="form-control" type="number" min="1" />
                 <span asp-validation-for="MaxCapacity" class="text-danger"></span>
-                <small class="form-text text-muted">Leave empty for unlimited capacity</small>
+                <small class="form-text text-muted">@Localizer["UnlimitedCapacityHint"]</small>
             </div>
 
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-circle"></i> Create Course
+                    <i class="bi bi-check-circle"></i> @Localizer["CreateCourse"]
                 </button>
-                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                <a asp-action="Index" class="btn btn-secondary">@Localizer["Cancel"]</a>
             </div>
         </form>
     </div>

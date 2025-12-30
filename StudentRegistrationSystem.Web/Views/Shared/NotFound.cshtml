@@ -1,19 +1,19 @@
 @{
-    ViewData["Title"] = "Not Found";
+    ViewData["Title"] = Localizer["NotFoundTitle"];
 }
 
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-header bg-warning text-dark text-center">
-                <h4 class="mb-0">404 - Not Found</h4>
+                <h4 class="mb-0">@Localizer["NotFoundTitle"]</h4>
             </div>
             <div class="card-body text-center">
-                <p class="mb-3">The page you are looking for could not be found.</p>
+                <p class="mb-3">@Localizer["NotFoundMessage"]</p>
                 
                 <hr class="my-4" />
                 
-                <a asp-action="Index" asp-controller="Home" class="btn btn-primary">Go to Home</a>
+                <a asp-action="Index" asp-controller="Home" class="btn btn-primary">@Localizer["GoToHome"]</a>
             </div>
         </div>
     </div>

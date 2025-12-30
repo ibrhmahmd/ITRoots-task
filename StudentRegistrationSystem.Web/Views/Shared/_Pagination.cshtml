@@ -1,5 +1,5 @@
 @using StudentRegistrationSystem.Domain.Common
-@model IPagedResult
+@model PagedResult<object>
 
 @if (Model != null && Model.TotalPages > 1)
 {
@@ -7,18 +7,18 @@
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
     var area = ViewContext.RouteData.Values["area"]?.ToString();
     
-    
+    // Get current query parameters to preserve them
     var queryParams = new Dictionary<string, string>();
-    foreach (var key in Context.Request.Query.Keys)
+    foreach (var key in Request.Query.Keys)
     {
         if (key != "page")
         {
-            queryParams[key] = Context.Request.Query[key].ToString();
+            queryParams[key] = Request.Query[key].ToString();
         }
     }
     
     // Build route values
-    var routeValues = new Dictionary<string, string>();
+    var routeValues = new Dictionary<string, object>();
     foreach (var param in queryParams)
     {
         routeValues[param.Key] = param.Value;
@@ -42,8 +42,8 @@
             <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
                 @if (Model.HasPreviousPage)
                 {
-                    routeValues["page"] = (Model.PageNumber - 1).ToString();
-                    routeValues["pageSize"] = Model.PageSize.ToString();
+                    routeValues["page"] = Model.PageNumber - 1;
+                    routeValues["pageSize"] = Model.PageSize;
                     <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
@@ -59,8 +59,8 @@
             @* First Page *@
             @if (startPage > 1)
             {
-                routeValues["page"] = "1";
-                routeValues["pageSize"] = Model.PageSize.ToString();
+                routeValues["page"] = 1;
+                routeValues["pageSize"] = Model.PageSize;
                 <li class="page-item">
                     <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues">1</a>
                 </li>
@@ -76,8 +76,8 @@
             @for (int i = startPage; i <= endPage; i++)
             {
                 var pageNum = i;
-                routeValues["page"] = pageNum.ToString();
-                routeValues["pageSize"] = Model.PageSize.ToString();
+                routeValues["page"] = pageNum;
+                routeValues["pageSize"] = Model.PageSize;
                 <li class="page-item @(pageNum == Model.PageNumber ? "active" : "")">
                     <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues">@pageNum</a>
                 </li>
@@ -92,8 +92,8 @@
                         <span class="page-link">...</span>
                     </li>
                 }
-                routeValues["page"] = Model.TotalPages.ToString();
-                routeValues["pageSize"] = Model.PageSize.ToString();
+                routeValues["page"] = Model.TotalPages;
+                routeValues["pageSize"] = Model.PageSize;
                 <li class="page-item">
                     <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues">@Model.TotalPages</a>
                 </li>
@@ -103,8 +103,8 @@
             <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
                 @if (Model.HasNextPage)
                 {
-                    routeValues["page"] = (Model.PageNumber + 1).ToString();
-                    routeValues["pageSize"] = Model.PageSize.ToString();
+                    routeValues["page"] = Model.PageNumber + 1;
+                    routeValues["pageSize"] = Model.PageSize;
                     <a class="page-link" asp-action="@action" asp-controller="@controller" asp-area="@area" asp-all-route-data="routeValues" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>

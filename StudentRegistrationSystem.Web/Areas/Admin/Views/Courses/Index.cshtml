@@ -109,6 +109,6 @@
 @if (Model.TotalPages > 1)
 {
     <div class="mt-4">
-        @await Html.PartialAsync("_Pagination", (IPagedResult)Model)
+        @await Html.PartialAsync("_Pagination", Model)
     </div>
 }

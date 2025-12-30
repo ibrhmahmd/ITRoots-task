@@ -1,8 +1,10 @@
 @using StudentRegistrationSystem.Core.DTOs
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> Localizer
 @model CourseDto
 
 @{
-    ViewData["Title"] = "Course Details";
+    ViewData["Title"] = Localizer["CourseDetails"];
 }
 
 <h2>@Model.CourseName</h2>
@@ -14,26 +16,26 @@
     </div>
     <div class="card-body">
         <dl class="row">
-            <dt class="col-sm-3">Course Code:</dt>
+            <dt class="col-sm-3">@Localizer["CourseCode"]:</dt>
             <dd class="col-sm-9">@Model.CourseCode</dd>
 
-            <dt class="col-sm-3">Course Name:</dt>
+            <dt class="col-sm-3">@Localizer["CourseName"]:</dt>
             <dd class="col-sm-9">@Model.CourseName</dd>
 
-            <dt class="col-sm-3">Description:</dt>
+            <dt class="col-sm-3">@Localizer["CourseDescription"]:</dt>
             <dd class="col-sm-9">@(Model.Description ?? "N/A")</dd>
 
-            <dt class="col-sm-3">Credits:</dt>
+            <dt class="col-sm-3">@Localizer["Credits"]:</dt>
             <dd class="col-sm-9">@Model.Credits</dd>
 
-            <dt class="col-sm-3">Semester:</dt>
+            <dt class="col-sm-3">@Localizer["Semester"]:</dt>
             <dd class="col-sm-9">@Model.Semester</dd>
 
-            <dt class="col-sm-3">Semester Year:</dt>
+            <dt class="col-sm-3">@Localizer["Year"]:</dt>
             <dd class="col-sm-9">@Model.SemesterYear</dd>
         </dl>
     </div>
     <div class="card-footer">
-        <a asp-action="Index" class="btn btn-secondary">Back to Courses</a>
+        <a asp-action="Index" class="btn btn-secondary">@Localizer["BackToCourses"]</a>
     </div>
 </div>

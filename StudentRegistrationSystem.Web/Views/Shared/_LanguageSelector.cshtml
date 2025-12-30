@@ -16,16 +16,16 @@
     <li class="nav-item">
         @if (currentCulture == "en")
         {
-             <form id="ar-form" asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="form-horizontal" role="form">
+             <form id="ar-form" asp-area="" asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="form-horizontal" role="form">
                 <input type="hidden" name="language" value="ar" />
-                <button type="submit" class="nav-link btn btn-link text-dark">العربية</button>
+                <button type="submit" class="nav-link btn btn-link">العربية</button>
             </form>
         }
         else
         {
-             <form id="en-form" asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="form-horizontal" role="form">
+             <form id="en-form" asp-area="" asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="form-horizontal" role="form">
                 <input type="hidden" name="language" value="en" />
-                <button type="submit" class="nav-link btn btn-link text-dark">English</button>
+                <button type="submit" class="nav-link btn btn-link">English</button>
             </form>
         }
     </li>

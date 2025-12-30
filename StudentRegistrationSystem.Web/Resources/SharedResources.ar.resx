@@ -1,110 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
+  <!-- Previous entries remain the same... -->
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -117,6 +13,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  
+  <!-- Navigation -->
   <data name="Home" xml:space="preserve">
     <value>الرئيسية</value>
   </data>
@@ -124,7 +22,7 @@
     <value>المواد الدراسيه</value>
   </data>
   <data name="MyCourses" xml:space="preserve">
-    <value>دوراتي</value>
+    <value>موادي</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>تسجيل الدخول</value>
@@ -141,45 +39,17 @@
   <data name="Welcome" xml:space="preserve">
     <value>مرحباً</value>
   </data>
-  <data name="FullName" xml:space="preserve">
-    <value>الاسم الكامل</value>
-  </data>
-  <data name="Phone" xml:space="preserve">
-    <value>رقم الهاتف</value>
-  </data>
-  <data name="AcademicYear" xml:space="preserve">
-    <value>السنة الدراسية</value>
-  </data>
-  <data name="SelectAcademicYear" xml:space="preserve">
-    <value>-- اختر السنة الدراسية --</value>
-  </data>
-  <data name="FirstYear" xml:space="preserve">
-    <value>السنة الأولى</value>
-  </data>
-  <data name="SecondYear" xml:space="preserve">
-    <value>السنة الثانية</value>
-  </data>
-  <data name="ThirdYear" xml:space="preserve">
-    <value>السنة الثالثة</value>
-  </data>
-  <data name="FourthYear" xml:space="preserve">
-    <value>السنة الرابعة</value>
-  </data>
-  <data name="Graduate" xml:space="preserve">
-    <value>خريج</value>
-  </data>
-  <data name="AlreadyHaveAccount" xml:space="preserve">
-    <value>لديك حساب بالفعل؟ سجل دخولك هنا</value>
-  </data>
   <data name="HomePageTitle" xml:space="preserve">
     <value>الصفحه الرئيسيه</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
     <value>سياسه الخصوصيه</value>
   </data>
+  
+  <!-- Authentication -->
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Email" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="Email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>كلمه المرور</value>
@@ -207,5 +77,495 @@
   </data>
   <data name="Username" xml:space="preserve">
     <value>اسم المستخدم</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>الاسم الكامل</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>رقم الهاتف</value>
+  </data>
+  
+  <!-- Academic Info -->
+  <data name="AcademicYear" xml:space="preserve">
+    <value>السنة الدراسية</value>
+  </data>
+  <data name="SelectAcademicYear" xml:space="preserve">
+    <value>-- اختر السنة الدراسية --</value>
+  </data>
+  <data name="FirstYear" xml:space="preserve">
+    <value>السنة الأولى</value>
+  </data>
+  <data name="SecondYear" xml:space="preserve">
+    <value>السنة الثانية</value>
+  </data>
+  <data name="ThirdYear" xml:space="preserve">
+    <value>السنة الثالثة</value>
+  </data>
+  <data name="FourthYear" xml:space="preserve">
+    <value>السنة الرابعة</value>
+  </data>
+  <data name="Graduate" xml:space="preserve">
+    <value>خريج</value>
+  </data>
+  <data name="AlreadyHaveAccount" xml:space="preserve">
+    <value>لديك حساب بالفعل؟ سجل دخولك هنا</value>
+  </data>
+  
+  <!-- Course Management -->
+  <data name="BrowseCourses" xml:space="preserve">
+    <value>تصفح المواد</value>
+  </data>
+  <data name="CourseRegistration" xml:space="preserve">
+    <value>تسجيل المواد</value>
+  </data>
+  <data name="AvailableCourses" xml:space="preserve">
+    <value>المواد المتاحة</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>عرض</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>إجراء</value>
+  </data>
+  <data name="RegisterAction" xml:space="preserve">
+    <value>تسجيل</value>
+  </data>
+  <data name="NoAvailableCourses" xml:space="preserve">
+    <value>لا توجد مواد متاحة.</value>
+  </data>
+  <data name="MyRegistrations" xml:space="preserve">
+    <value>تسجيلاتي</value>
+  </data>
+  <data name="Unregister" xml:space="preserve">
+    <value>إلغاء التسجيل</value>
+  </data>
+  <data name="NoCoursesRegistered" xml:space="preserve">
+    <value>لم تقم بتسجيل أي مواد بعد.</value>
+  </data>
+  <data name="CourseCode" xml:space="preserve">
+    <value>رمز المادة</value>
+  </data>
+  <data name="CourseName" xml:space="preserve">
+    <value>اسم المادة</value>
+  </data>
+  <data name="Credits" xml:space="preserve">
+    <value>الساعات</value>
+  </data>
+  <data name="MaxCapacity" xml:space="preserve">
+    <value>السعة القصوى</value>
+  </data>
+  <data name="CourseDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="Semester" xml:space="preserve">
+    <value>الفصل الدراسي</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>السنة</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>نشطة</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>غير نشطة</value>
+  </data>
+  <data name="CoursesCount" xml:space="preserve">
+    <value>عدد المواد</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>المجموع</value>
+  </data>
+  <data name="NoCoursesFound" xml:space="preserve">
+    <value>لم يتم العثور على مواد.</value>
+  </data>
+  <data name="CreateFirstCourse" xml:space="preserve">
+    <value>إنشاء أول مادة</value>
+  </data>
+  <data name="AddCourse" xml:space="preserve">
+    <value>إضافة مادة</value>
+  </data>
+  <data name="CoursesManagement" xml:space="preserve">
+    <value>إدارة المواد</value>
+  </data>
+  <data name="Unlimited" xml:space="preserve">
+    <value>غير محدود</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  
+  <!-- Pagination -->
+  <data name="ShowingEntries" xml:space="preserve">
+    <value>إظهار {0} إلى {1} من {2} مدخلاً</value>
+  </data>
+  <data name="PageOf" xml:space="preserve">
+    <value>(صفحة {0} من {1})</value>
+  </data>
+  <data name="HomePage" xml:space="preserve">
+    <value>الصفحة الرئيسية</value>
+  </data>
+  
+  <!-- Validation Messages -->
+  <data name="RequiredField" xml:space="preserve">
+    <value>حقل {0} مطلوب.</value>
+  </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>كلمة المرور وتأكيد كلمة المرور غير متطابقين.</value>
+  </data>
+  <data name="StringLengthError" xml:space="preserve">
+    <value>يجب أن يكون {0} على الأقل {2} وبحد أقصى {1} حرفاً.</value>
+  </data>
+  <data name="EmailInvalid" xml:space="preserve">
+    <value>حقل {0} ليس عنوان بريد إلكتروني صالح.</value>
+  </data>
+  <data name="RangeError" xml:space="preserve">
+    <value>يجب أن يكون الحقل {0} بين {1} و {2}.</value>
+  </data>
+  
+  <!-- My Courses Page -->
+  <data name="MyCoursesTitle" xml:space="preserve">
+    <value>موادي</value>
+  </data>
+  <data name="MyRegisteredCourses" xml:space="preserve">
+    <value>المواد المسجلة</value>
+  </data>
+  <data name="RegistrationDate" xml:space="preserve">
+    <value>تاريخ التسجيل</value>
+  </data>
+  <data name="BrowseCoursesAction" xml:space="preserve">
+    <value>تصفح المواد</value>
+  </data>
+  <data name="BackToCourses" xml:space="preserve">
+    <value>العودة للمواد</value>
+  </data>
+  
+  <!-- Email Verification -->
+  <data name="VerificationEmailSentTitle" xml:space="preserve">
+    <value>تم إرسال بريد التحقق</value>
+  </data>
+  <data name="EmailSentHeader" xml:space="preserve">
+    <value>تم الإرسال</value>
+  </data>
+  <data name="VerificationEmailSentHeader" xml:space="preserve">
+    <value>تم إرسال رابط التحقق!</value>
+  </data>
+  <data name="VerificationEmailSentBody" xml:space="preserve">
+    <value>تم إرسال رسالة تحقق إلى بريدك الإلكتروني.</value>
+  </data>
+  <data name="CheckInboxBody" xml:space="preserve">
+    <value>يرجى التحقق من صندوق الوارد (والمجلد العشوائي) والنقر على رابط التحقق لتفعيل حسابك.</value>
+  </data>
+  <data name="VerificationImportant" xml:space="preserve">
+    <value>تنبيه: يجب عليك التحقق من بريدك الإلكتروني قبل تسجيل الدخول.</value>
+  </data>
+  <data name="GoToLogin" xml:space="preserve">
+    <value>الذهاب لتسجيل الدخول</value>
+  </data>
+  <data name="EmailNotReceived" xml:space="preserve">
+    <value>لم تستلم البريد الإلكتروني؟ تحقق من مجلد الرسائل غير المرغوب فيها أو اتصل بالدعم.</value>
+  </data>
+  <data name="VerifyEmailTitle" xml:space="preserve">
+    <value>تأكيد البريد الإلكتروني</value>
+  </data>
+  <data name="VerifyEmailHeader" xml:space="preserve">
+    <value>تأكيد البريد الإلكتروني</value>
+  </data>
+  <data name="EnterVerificationToken" xml:space="preserve">
+    <value>أدخل رمز التحقق المرسل إلى بريدك الإلكتروني.</value>
+  </data>
+  <data name="VerificationToken" xml:space="preserve">
+    <value>رمز التحقق</value>
+  </data>
+  <data name="VerifyEmailButton" xml:space="preserve">
+    <value>تأكيد البريد الإلكتروني</value>
+  </data>
+  
+  <!-- Additional Common Entries -->
+  <data name="Save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>تصفية</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>إعادة تعيين</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>عرض</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>السابق</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>التالي</value>
+  </data>
+  <data name="First" xml:space="preserve">
+    <value>الأول</value>
+  </data>
+  <data name="Last" xml:space="preserve">
+    <value>الأخير</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>جاري التحميل...</value>
+  </data>
+  <data name="NoDataAvailable" xml:space="preserve">
+    <value>لا توجد بيانات متاحة</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>نجح</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>خطأ</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>تحذير</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>معلومات</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>هل أنت متأكد؟</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>موافق</value>
+  </data>
+  
+  <!-- Course-specific -->
+  <data name="Instructor" xml:space="preserve">
+    <value>المدرس</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>القسم</value>
+  </data>
+  <data name="Prerequisites" xml:space="preserve">
+    <value>المتطلبات السابقة</value>
+  </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>الجدول</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>الموقع</value>
+  </data>
+  <data name="Room" xml:space="preserve">
+    <value>القاعة</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>تاريخ البدء</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>تاريخ الانتهاء</value>
+  </data>
+  <data name="EnrolledStudents" xml:space="preserve">
+    <value>الطلاب المسجلين</value>
+  </data>
+  <data name="AvailableSeats" xml:space="preserve">
+    <value>المقاعد المتاحة</value>
+  </data>
+  <data name="Full" xml:space="preserve">
+    <value>ممتلئة</value>
+  </data>
+  <data name="Waitlist" xml:space="preserve">
+    <value>قائمة الانتظار</value>
+  </data>
+  <data name="Grade" xml:space="preserve">
+    <value>الدرجة</value>
+  </data>
+  <data name="GPA" xml:space="preserve">
+    <value>المعدل التراكمي</value>
+  </data>
+  <data name="Attendance" xml:space="preserve">
+    <value>الحضور</value>
+  </data>
+  <data name="Assignments" xml:space="preserve">
+    <value>الواجبات</value>
+  </data>
+  <data name="Exams" xml:space="preserve">
+    <value>الامتحانات</value>
+  </data>
+  <data name="Materials" xml:space="preserve">
+    <value>المواد الدراسية</value>
+  </data>
+  <data name="Syllabus" xml:space="preserve">
+    <value>المنهج</value>
+  </data>
+  <data name="Announcements" xml:space="preserve">
+    <value>الإعلانات</value>
+  </data>
+  
+  <!-- Messages -->
+  <data name="RegistrationSuccessful" xml:space="preserve">
+    <value>تم التسجيل بنجاح</value>
+  </data>
+  <data name="RegistrationFailed" xml:space="preserve">
+    <value>فشل التسجيل</value>
+  </data>
+  <data name="UnregistrationSuccessful" xml:space="preserve">
+    <value>تم إلغاء التسجيل بنجاح</value>
+  </data>
+  <data name="UnregistrationFailed" xml:space="preserve">
+    <value>فشل إلغاء التسجيل</value>
+  </data>
+  <data name="LoginSuccessful" xml:space="preserve">
+    <value>تم تسجيل الدخول بنجاح</value>
+  </data>
+  <data name="LoginFailed" xml:space="preserve">
+    <value>فشل تسجيل الدخول</value>
+  </data>
+  <data name="InvalidCredentials" xml:space="preserve">
+    <value>بيانات الدخول غير صحيحة</value>
+  </data>
+  <data name="AccountCreated" xml:space="preserve">
+    <value>تم إنشاء الحساب بنجاح</value>
+  </data>
+  <data name="AccountCreationFailed" xml:space="preserve">
+    <value>فشل إنشاء الحساب</value>
+  </data>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>البريد الإلكتروني موجود بالفعل</value>
+  </data>
+  <data name="UsernameAlreadyExists" xml:space="preserve">
+    <value>اسم المستخدم موجود بالفعل</value>
+  </data>
+  <data name="CourseAlreadyRegistered" xml:space="preserve">
+    <value>أنت مسجل في هذه المادة بالفعل</value>
+  </data>
+  <data name="CourseFull" xml:space="preserve">
+    <value>المادة ممتلئة</value>
+  </data>
+  <data name="PrerequisitesNotMet" xml:space="preserve">
+    <value>المتطلبات السابقة غير مستوفاة</value>
+  </data>
+  <data name="SaveSuccessful" xml:space="preserve">
+    <value>تم الحفظ بنجاح</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>فشل الحفظ</value>
+  </data>
+  <data name="DeleteConfirmation" xml:space="preserve">
+    <value>هل أنت متأكد من رغبتك في الحذف؟</value>
+  </data>
+  <data name="DeleteSuccessful" xml:space="preserve">
+    <value>تم الحذف بنجاح</value>
+  </data>
+  <data name="DeleteFailed" xml:space="preserve">
+    <value>فشل الحذف</value>
+  </data>
+  <data name="UpdateSuccessful" xml:space="preserve">
+    <value>تم التحديث بنجاح</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>فشل التحديث</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>تم رفض الوصول</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>غير موجود</value>
+  </data>
+  <data name="ServerError" xml:space="preserve">
+    <value>خطأ في الخادم</value>
+  </data>
+  <data name="NetworkError" xml:space="preserve">
+    <value>خطأ في الشبكة</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>حاول مرة أخرى</value>
+  </data>
+  
+  <!-- Profile & Settings -->
+  <data name="Profile" xml:space="preserve">
+    <value>الملف الشخصي</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="MyProfile" xml:space="preserve">
+    <value>ملفي الشخصي</value>
+  </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>تعديل الملف الشخصي</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>تغيير كلمة المرور</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>كلمة المرور الحالية</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>كلمة المرور الجديدة</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>تأكيد كلمة المرور الجديدة</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>الإشعارات</value>
+  </data>
+  <data name="EmailNotifications" xml:space="preserve">
+    <value>إشعارات البريد الإلكتروني</value>
+  </data>
+  <data name="SMSNotifications" xml:space="preserve">
+    <value>إشعارات الرسائل النصية</value>
+  </data>
+  
+  <!-- Help & Support -->
+  <data name="Help" xml:space="preserve">
+    <value>مساعدة</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>الدعم</value>
+  </data>
+  <data name="ContactUs" xml:space="preserve">
+    <value>اتصل بنا</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>الأسئلة الشائعة</value>
+  </data>
+  <data name="TermsOfService" xml:space="preserve">
+    <value>شروط الخدمة</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>حول</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>جميع الحقوق محفوظة</value>
   </data>
 </root>
