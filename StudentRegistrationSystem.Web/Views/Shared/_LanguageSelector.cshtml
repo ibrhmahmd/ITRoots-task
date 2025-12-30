@@ -1,0 +1,17 @@
+@{
+    var currentLanguage = Context.Request.Cookies["Language"] ?? "en";
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
+<div class="btn-group" role="group">
+    <form asp-controller="Language" asp-action="SetLanguage" method="post" class="d-inline">
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+        <input type="hidden" name="language" value="en" />
+        <button type="submit" class="btn btn-sm @(currentLanguage == "en" ? "btn-primary" : "btn-outline-primary")">EN</button>
+    </form>
+    <form asp-controller="Language" asp-action="SetLanguage" method="post" class="d-inline">
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+        <input type="hidden" name="language" value="ar" />
+        <button type="submit" class="btn btn-sm @(currentLanguage == "ar" ? "btn-primary" : "btn-outline-primary")">AR</button>
+    </form>
+</div>
