@@ -1,0 +1,73 @@
+@using StudentRegistrationSystem.Web.ViewModels.Courses
+@model BrowseCoursesViewModel
+
+@{
+    ViewData["Title"] = "Browse Courses";
+}
+
+<h2 class="mb-4">Course Registration</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <h4>Available Courses</h4>
+        <div class="table-responsive">
+            <table class="table table-hover border">
+                <thead class="table-light">
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Credits</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model.AvailableCourses)
+                    {
+                        <tr>
+                            <td>@course.CourseCode</td>
+                            <td>@course.CourseName</td>
+                            <td>@course.Credits</td>
+                            <td>
+                                <form asp-action="Register" method="post">
+                                    <input type="hidden" name="courseId" value="@course.Id" />
+                                    <button type="submit" class="btn btn-sm btn-primary">Register</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">My Registrations</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    @foreach (var course in Model.RegisteredCourses)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>@course.CourseCode</strong><br />
+                                <small>@course.CourseName</small>
+                            </div>
+                            <form asp-action="Unregister" method="post">
+                                <input type="hidden" name="courseId" value="@course.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger border-0">
+                                    <i class="bi bi-trash"></i> Unregister
+                                </button>
+                            </form>
+                        </li>
+                    }
+                    @if (!Model.RegisteredCourses.Any())
+                    {
+                        <li class="list-group-item text-muted">No courses registered.</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
