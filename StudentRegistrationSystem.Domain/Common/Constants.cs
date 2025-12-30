@@ -1,22 +1,16 @@
 namespace StudentRegistrationSystem.Domain.Common;
 
-/// <summary>
-/// Application constants
-/// </summary>
+
 public static class Constants
 {
-    /// <summary>
-    /// User roles
-    /// </summary>
+    
     public static class Roles
     {
         public const string Student = "Student";
         public const string Admin = "Admin";
     }
 
-    /// <summary>
-    /// Registration statuses
-    /// </summary>
+    
     public static class RegistrationStatus
     {
         public const string Registered = "Registered";
@@ -25,9 +19,7 @@ public static class Constants
         public const string Completed = "Completed";
     }
 
-    /// <summary>
-    /// Semester names
-    /// </summary>
+    
     public static class Semesters
     {
         public const string Fall = "Fall";
@@ -35,18 +27,14 @@ public static class Constants
         public const string Summer = "Summer";
     }
 
-    /// <summary>
-    /// Languages
-    /// </summary>
+    
     public static class Languages
     {
         public const string English = "en";
         public const string Arabic = "ar";
     }
 
-    /// <summary>
-    /// Session keys
-    /// </summary>
+    
     public static class SessionKeys
     {
         public const string UserId = "UserId";
@@ -55,18 +43,14 @@ public static class Constants
         public const string IsEmailVerified = "IsEmailVerified";
     }
 
-    /// <summary>
-    /// Cookie names
-    /// </summary>
+    
     public static class Cookies
     {
         public const string Language = "Language";
         public const string RememberMe = "RememberMe";
     }
 
-    /// <summary>
-    /// Default values
-    /// </summary>
+    
     public static class Defaults
     {
         public const int PageSize = 10;
@@ -74,9 +58,7 @@ public static class Constants
         public const string DefaultLanguage = "en";
     }
 
-    /// <summary>
-    /// Error messages
-    /// </summary>
+        
     public static class ErrorMessages
     {
         public const string NotFound = "The requested resource was not found.";

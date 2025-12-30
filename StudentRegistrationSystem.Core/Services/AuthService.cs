@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using StudentRegistrationSystem.Core.DTOs;
 using StudentRegistrationSystem.Core.Exceptions;
@@ -18,22 +19,25 @@ public class AuthService : IAuthService
     private readonly IStudentRepository _studentRepository;
     private readonly IPasswordService _passwordService;
     private readonly IEmailService _emailService;
-    private readonly string _baseUrl;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly string _fallbackBaseUrl;
 
     public AuthService(
         IUserRepository userRepository,
         IStudentRepository studentRepository,
         IPasswordService passwordService,
         IEmailService emailService,
+        IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration)
     {
         _userRepository = userRepository;
         _studentRepository = studentRepository;
         _passwordService = passwordService;
         _emailService = emailService;
+        _httpContextAccessor = httpContextAccessor;
         
         var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
-        _baseUrl = appSettings?.BaseUrl ?? "https://localhost:5001";
+        _fallbackBaseUrl = appSettings?.BaseUrl ?? "https://localhost:5001";
     }
 
     public async Task<UserDto> RegisterAsync(string fullName, string username, string password, string email, string? phone, int? academicYear)
@@ -144,9 +148,24 @@ public class AuthService : IAuthService
 
         var token = await _passwordService.GeneratePasswordResetTokenAsync(user.Id);
         
-        var resetLink = $"{_baseUrl.TrimEnd('/')}/Account/ResetPassword?token={token}";
+        var baseUrl = GetBaseUrl();
+        var resetLink = $"{baseUrl.TrimEnd('/')}/Account/ResetPassword?token={token}";
         
         return await _emailService.SendPasswordResetEmailAsync(user.Email, user.Username, resetLink);
+    }
+
+    private string GetBaseUrl()
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext != null)
+        {
+            var request = httpContext.Request;
+            var scheme = request.Scheme;
+            var host = request.Host;
+            return $"{scheme}://{host}";
+        }
+        
+        return _fallbackBaseUrl;
     }
 
     public async Task<bool> ResetPasswordAsync(string token, string newPassword)
