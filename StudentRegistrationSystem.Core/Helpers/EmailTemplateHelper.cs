@@ -2,14 +2,9 @@ using System;
 
 namespace StudentRegistrationSystem.Core.Helpers;
 
-/// <summary>
-/// Helper class for email templates
-/// </summary>
 public static class EmailTemplateHelper
 {
-    /// <summary>
-    /// Generates email verification email body
-    /// </summary>
+   
     public static string GetEmailVerificationBody(string fullName, string verificationLink)
     {
         return $@"
@@ -50,9 +45,7 @@ public static class EmailTemplateHelper
 </html>";
     }
 
-    /// <summary>
-    /// Generates password reset email body
-    /// </summary>
+    
     public static string GetPasswordResetBody(string fullName, string resetLink)
     {
         return $@"
@@ -95,9 +88,6 @@ public static class EmailTemplateHelper
 </html>";
     }
 
-    /// <summary>
-    /// Generates welcome email body
-    /// </summary>
     public static string GetWelcomeEmailBody(string fullName)
     {
         return $@"
