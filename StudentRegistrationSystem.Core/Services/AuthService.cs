@@ -87,7 +87,7 @@ public class AuthService : IAuthService
         await _studentRepository.CreateAsync(student);
 
         // Send verification email
-        var baseUrl = GetBaseUrl();
+        var baseUrl = UrlHelper.GetBaseUrl(_httpContextAccessor.HttpContext, _fallbackBaseUrl);
         var verificationLink = $"{baseUrl.TrimEnd('/')}/Account/VerifyEmail?token={verificationToken}";
         await _emailService.SendVerificationEmailAsync(email, fullName, verificationLink);
 
@@ -165,25 +165,12 @@ public class AuthService : IAuthService
 
         var token = await _passwordService.GeneratePasswordResetTokenAsync(user.Id);
         
-        var baseUrl = GetBaseUrl();
+        var baseUrl = UrlHelper.GetBaseUrl(_httpContextAccessor.HttpContext, _fallbackBaseUrl);
         var resetLink = $"{baseUrl.TrimEnd('/')}/Account/ResetPassword?token={token}";
         
         return await _emailService.SendPasswordResetEmailAsync(user.Email, user.Username, resetLink);
     }
 
-    private string GetBaseUrl()
-    {
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext != null)
-        {
-            var request = httpContext.Request;
-            var scheme = request.Scheme;
-            var host = request.Host;
-            return $"{scheme}://{host}";
-        }
-        
-        return _fallbackBaseUrl;
-    }
 
     public async Task<bool> ResetPasswordAsync(string token, string newPassword)
     {

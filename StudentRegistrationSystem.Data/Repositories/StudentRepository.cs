@@ -13,19 +13,16 @@ namespace StudentRegistrationSystem.Data.Repositories;
 /// <summary>
 /// Repository implementation for Student entity using Dapper
 /// </summary>
-public class StudentRepository : IStudentRepository
+public class StudentRepository : BaseRepository, IStudentRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
-
-    public StudentRepository(IDbConnectionFactory connectionFactory)
+    public StudentRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
     {
-        _connectionFactory = connectionFactory;
         StudentMapper.Configure();
     }
 
     public async Task<Student?> GetByIdAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<Student>(
             StudentQueries.GetById,
             new { Id = id }
@@ -35,7 +32,7 @@ public class StudentRepository : IStudentRepository
 
     public async Task<Student?> GetByUserIdAsync(string userId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<Student>(
             StudentQueries.GetByUserId,
             new { UserId = userId }
@@ -45,7 +42,7 @@ public class StudentRepository : IStudentRepository
 
     public async Task<IEnumerable<Student>> GetAllAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var results = await connection.QueryAsync<Student>(StudentQueries.GetAll);
         return results;
     }
@@ -63,7 +60,7 @@ public class StudentRepository : IStudentRepository
             student.CreatedAt = DateTime.UtcNow;
         }
 
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         await connection.ExecuteAsync(
             StudentQueries.Create,
             new
@@ -83,7 +80,7 @@ public class StudentRepository : IStudentRepository
 
     public async Task<bool> UpdateAsync(Student student)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(
             StudentQueries.Update,
             new
@@ -101,7 +98,7 @@ public class StudentRepository : IStudentRepository
 
     public async Task<bool> ExistsByUserIdAsync(string userId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var count = await connection.QuerySingleAsync<int>(
             StudentQueries.ExistsByUserId,
             new { UserId = userId }

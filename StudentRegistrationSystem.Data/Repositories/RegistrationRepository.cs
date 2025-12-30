@@ -10,21 +10,15 @@ using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
 namespace StudentRegistrationSystem.Data.Repositories;
 
-/// <summary>
-/// Repository implementation for Registration entity using Dapper
-/// </summary>
-public class RegistrationRepository : IRegistrationRepository
+public class RegistrationRepository : BaseRepository, IRegistrationRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
-
-    public RegistrationRepository(IDbConnectionFactory connectionFactory)
+    public RegistrationRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
     {
-        _connectionFactory = connectionFactory;
     }
 
     public async Task<Registration?> GetByIdAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<Registration>(
             RegistrationQueries.GetById,
             new { Id = id }
@@ -34,7 +28,7 @@ public class RegistrationRepository : IRegistrationRepository
 
     public async Task<IEnumerable<Registration>> GetByStudentIdAsync(string studentId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var results = await connection.QueryAsync<Registration>(
             RegistrationQueries.GetByStudentId,
             new { StudentId = studentId }
@@ -44,7 +38,7 @@ public class RegistrationRepository : IRegistrationRepository
 
     public async Task<IEnumerable<Registration>> GetActiveByStudentIdAsync(string studentId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var results = await connection.QueryAsync<Registration>(
             RegistrationQueries.GetActiveByStudentId,
             new { StudentId = studentId }
@@ -54,7 +48,7 @@ public class RegistrationRepository : IRegistrationRepository
 
     public async Task<IEnumerable<Registration>> GetByCourseIdAsync(string courseId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var results = await connection.QueryAsync<Registration>(
             RegistrationQueries.GetByCourseId,
             new { CourseId = courseId }
@@ -64,7 +58,7 @@ public class RegistrationRepository : IRegistrationRepository
 
     public async Task<bool> IsRegisteredAsync(string studentId, string courseId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var count = await connection.QuerySingleAsync<int>(
             RegistrationQueries.IsRegistered,
             new { StudentId = studentId, CourseId = courseId }
@@ -90,7 +84,7 @@ public class RegistrationRepository : IRegistrationRepository
             registration.RegistrationDate = DateTime.UtcNow;
         }
 
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         await connection.ExecuteAsync(
             RegistrationQueries.Create,
             new
@@ -110,7 +104,7 @@ public class RegistrationRepository : IRegistrationRepository
 
     public async Task<bool> UpdateAsync(Registration registration)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(
             RegistrationQueries.Update,
             new
@@ -126,7 +120,7 @@ public class RegistrationRepository : IRegistrationRepository
 
     public async Task<bool> DeleteAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(
             RegistrationQueries.Delete,
             new { Id = id, UpdatedAt = DateTime.UtcNow }
@@ -136,7 +130,7 @@ public class RegistrationRepository : IRegistrationRepository
 
     public async Task<int> GetRegistrationCountAsync(string courseId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var count = await connection.QuerySingleAsync<int>(
             RegistrationQueries.GetRegistrationCount,
             new { CourseId = courseId }

@@ -11,22 +11,16 @@ using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
 namespace StudentRegistrationSystem.Data.Repositories;
 
-/// <summary>
-/// Repository implementation for Course entity using Dapper
-/// </summary>
-public class CourseRepository : ICourseRepository
+public class CourseRepository : BaseRepository, ICourseRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
-
-    public CourseRepository(IDbConnectionFactory connectionFactory)
+    public CourseRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
     {
-        _connectionFactory = connectionFactory;
         CourseMapper.Configure();
     }
 
     public async Task<Course?> GetByIdAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<Course>(
             CourseQueries.GetById,
             new { Id = id }
@@ -36,21 +30,21 @@ public class CourseRepository : ICourseRepository
 
     public async Task<IEnumerable<Course>> GetAllActiveAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var results = await connection.QueryAsync<Course>(CourseQueries.GetAllActive);
         return results;
     }
 
     public async Task<IEnumerable<Course>> GetAllAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var results = await connection.QueryAsync<Course>(CourseQueries.GetAll);
         return results;
     }
 
     public async Task<IEnumerable<Course>> GetBySemesterAsync(string semester, int semesterYear)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var results = await connection.QueryAsync<Course>(
             CourseQueries.GetBySemester,
             new { Semester = semester, SemesterYear = semesterYear }
@@ -71,7 +65,7 @@ public class CourseRepository : ICourseRepository
             course.CreatedAt = DateTime.UtcNow;
         }
 
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         await connection.ExecuteAsync(
             CourseQueries.Create,
             new
@@ -97,7 +91,7 @@ public class CourseRepository : ICourseRepository
 
     public async Task<bool> UpdateAsync(Course course)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(
             CourseQueries.Update,
             new
@@ -122,7 +116,7 @@ public class CourseRepository : ICourseRepository
 
     public async Task<bool> DeleteAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(
             CourseQueries.Delete,
             new { Id = id, UpdatedAt = DateTime.UtcNow }
@@ -132,7 +126,7 @@ public class CourseRepository : ICourseRepository
 
     public async Task<bool> HasRegistrationsAsync(string courseId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var count = await connection.QuerySingleAsync<int>(
             CourseQueries.HasRegistrations,
             new { CourseId = courseId }
@@ -142,7 +136,7 @@ public class CourseRepository : ICourseRepository
 
     public async Task<bool> CourseCodeExistsAsync(string courseCode, string? excludeId = null)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var count = await connection.QuerySingleAsync<int>(
             CourseQueries.CourseCodeExists,
             new { CourseCode = courseCode, ExcludeId = excludeId }
@@ -154,7 +148,7 @@ public class CourseRepository : ICourseRepository
     {
         parameters.Validate();
 
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
 
         // Get total count
         var totalCount = await connection.QuerySingleAsync<int>(CourseQueries.GetCount);
@@ -178,7 +172,7 @@ public class CourseRepository : ICourseRepository
     {
         parameters.Validate();
 
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
 
         // Get total count
         var totalCount = await connection.QuerySingleAsync<int>(CourseQueries.GetActiveCount);
@@ -200,13 +194,13 @@ public class CourseRepository : ICourseRepository
 
     public async Task<int> GetCountAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         return await connection.QuerySingleAsync<int>(CourseQueries.GetCount);
     }
 
     public async Task<int> GetActiveCountAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         return await connection.QuerySingleAsync<int>(CourseQueries.GetActiveCount);
     }
 }

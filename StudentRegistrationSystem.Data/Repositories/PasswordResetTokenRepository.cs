@@ -10,21 +10,15 @@ using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
 namespace StudentRegistrationSystem.Data.Repositories;
 
-/// <summary>
-/// Repository implementation for PasswordResetToken entity using Dapper
-/// </summary>
-public class PasswordResetTokenRepository : IPasswordResetTokenRepository
+public class PasswordResetTokenRepository : BaseRepository, IPasswordResetTokenRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
-
-    public PasswordResetTokenRepository(IDbConnectionFactory connectionFactory)
+    public PasswordResetTokenRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
     {
-        _connectionFactory = connectionFactory;
     }
 
     public async Task<PasswordResetToken?> GetByIdAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<PasswordResetToken>(
             PasswordResetTokenQueries.GetById,
             new { Id = id }
@@ -34,7 +28,7 @@ public class PasswordResetTokenRepository : IPasswordResetTokenRepository
 
     public async Task<PasswordResetToken?> GetByTokenAsync(string token)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<PasswordResetToken>(
             PasswordResetTokenQueries.GetByToken,
             new { Token = token }
@@ -44,7 +38,7 @@ public class PasswordResetTokenRepository : IPasswordResetTokenRepository
 
     public async Task<IEnumerable<PasswordResetToken>> GetActiveByUserIdAsync(string userId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var results = await connection.QueryAsync<PasswordResetToken>(
             PasswordResetTokenQueries.GetActiveByUserId,
             new { UserId = userId }
@@ -65,7 +59,7 @@ public class PasswordResetTokenRepository : IPasswordResetTokenRepository
             token.CreatedAt = DateTime.UtcNow;
         }
 
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         await connection.ExecuteAsync(
             PasswordResetTokenQueries.Create,
             new
@@ -83,7 +77,7 @@ public class PasswordResetTokenRepository : IPasswordResetTokenRepository
 
     public async Task<bool> UpdateAsync(PasswordResetToken token)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(
             PasswordResetTokenQueries.Update,
             new
@@ -99,7 +93,7 @@ public class PasswordResetTokenRepository : IPasswordResetTokenRepository
 
     public async Task<bool> MarkAsUsedAsync(string tokenId)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(
             PasswordResetTokenQueries.MarkAsUsed,
             new { Id = tokenId }
@@ -109,7 +103,7 @@ public class PasswordResetTokenRepository : IPasswordResetTokenRepository
 
     public async Task<int> DeleteExpiredTokensAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(PasswordResetTokenQueries.DeleteExpired);
         return rowsAffected;
     }

@@ -9,22 +9,16 @@ using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
 namespace StudentRegistrationSystem.Data.Repositories;
 
-/// <summary>
-/// Repository implementation for User entity using Dapper
-/// </summary>
-public class UserRepository : IUserRepository
+public class UserRepository : BaseRepository, IUserRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
-
-    public UserRepository(IDbConnectionFactory connectionFactory)
+    public UserRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
     {
-        _connectionFactory = connectionFactory;
         UserMapper.Configure();
     }
 
     public async Task<User?> GetByIdAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<User>(
             UserQueries.GetById,
             new { Id = id }
@@ -34,7 +28,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByUsernameAsync(string username)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<User>(
             UserQueries.GetByUsername,
             new { Username = username }
@@ -44,7 +38,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<User>(
             UserQueries.GetByEmail,
             new { Email = email }
@@ -54,7 +48,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailVerificationTokenAsync(string token)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<User>(
             UserQueries.GetByEmailVerificationToken,
             new { Token = token }
@@ -75,7 +69,7 @@ public class UserRepository : IUserRepository
             user.CreatedAt = DateTime.UtcNow;
         }
 
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         await connection.ExecuteAsync(
             UserQueries.Create,
             new
@@ -98,7 +92,7 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> UpdateAsync(User user)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var rowsAffected = await connection.ExecuteAsync(
             UserQueries.Update,
             new
@@ -120,7 +114,7 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> UsernameExistsAsync(string username)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var count = await connection.QuerySingleAsync<int>(
             UserQueries.UsernameExists,
             new { Username = username }
@@ -130,7 +124,7 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> EmailExistsAsync(string email)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = CreateConnection();
         var count = await connection.QuerySingleAsync<int>(
             UserQueries.EmailExists,
             new { Email = email }
