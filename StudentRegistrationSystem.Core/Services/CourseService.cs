@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using StudentRegistrationSystem.Core.DTOs;
 using StudentRegistrationSystem.Core.Exceptions;
+using StudentRegistrationSystem.Domain.Common;
 using StudentRegistrationSystem.Domain.Entities;
 using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 using StudentRegistrationSystem.Core.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace StudentRegistrationSystem.Core.Services;
 
@@ -118,6 +117,30 @@ public class CourseService : ICourseService
         }
 
         return await _courseRepository.DeleteAsync(id);
+    }
+
+    public async Task<PagedResult<CourseDto>> GetAllPagedAsync(PaginationParameters parameters)
+    {
+        var pagedResult = await _courseRepository.GetAllPagedAsync(parameters);
+        return new PagedResult<CourseDto>
+        {
+            Items = pagedResult.Items.Select(MapToDto),
+            TotalCount = pagedResult.TotalCount,
+            PageNumber = pagedResult.PageNumber,
+            PageSize = pagedResult.PageSize
+        };
+    }
+
+    public async Task<PagedResult<CourseDto>> GetAllActivePagedAsync(PaginationParameters parameters)
+    {
+        var pagedResult = await _courseRepository.GetAllActivePagedAsync(parameters);
+        return new PagedResult<CourseDto>
+        {
+            Items = pagedResult.Items.Select(MapToDto),
+            TotalCount = pagedResult.TotalCount,
+            PageNumber = pagedResult.PageNumber,
+            PageSize = pagedResult.PageSize
+        };
     }
 
     private static CourseDto MapToDto(Course course)

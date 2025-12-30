@@ -5,6 +5,7 @@ using Dapper;
 using StudentRegistrationSystem.Data.Context;
 using StudentRegistrationSystem.Data.Mappers;
 using StudentRegistrationSystem.Data.Queries;
+using StudentRegistrationSystem.Domain.Common;
 using StudentRegistrationSystem.Domain.Entities;
 using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
@@ -147,5 +148,65 @@ public class CourseRepository : ICourseRepository
             new { CourseCode = courseCode, ExcludeId = excludeId }
         );
         return count > 0;
+    }
+
+    public async Task<PagedResult<Course>> GetAllPagedAsync(PaginationParameters parameters)
+    {
+        parameters.Validate();
+
+        using var connection = _connectionFactory.CreateConnection();
+
+        // Get total count
+        var totalCount = await connection.QuerySingleAsync<int>(CourseQueries.GetCount);
+
+        // Get paginated results
+        var items = await connection.QueryAsync<Course>(
+            CourseQueries.GetAllPaged,
+            new { Offset = parameters.Skip, PageSize = parameters.Take }
+        );
+
+        return new PagedResult<Course>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = parameters.PageNumber,
+            PageSize = parameters.PageSize
+        };
+    }
+
+    public async Task<PagedResult<Course>> GetAllActivePagedAsync(PaginationParameters parameters)
+    {
+        parameters.Validate();
+
+        using var connection = _connectionFactory.CreateConnection();
+
+        // Get total count
+        var totalCount = await connection.QuerySingleAsync<int>(CourseQueries.GetActiveCount);
+
+        // Get paginated results
+        var items = await connection.QueryAsync<Course>(
+            CourseQueries.GetAllActivePaged,
+            new { Offset = parameters.Skip, PageSize = parameters.Take }
+        );
+
+        return new PagedResult<Course>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = parameters.PageNumber,
+            PageSize = parameters.PageSize
+        };
+    }
+
+    public async Task<int> GetCountAsync()
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        return await connection.QuerySingleAsync<int>(CourseQueries.GetCount);
+    }
+
+    public async Task<int> GetActiveCountAsync()
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        return await connection.QuerySingleAsync<int>(CourseQueries.GetActiveCount);
     }
 }

@@ -73,4 +73,32 @@ public static class CourseQueries
         SELECT COUNT(1)
         FROM Courses
         WHERE CourseCode = @CourseCode AND (@ExcludeId IS NULL OR CourseId != @ExcludeId)";
+
+    public const string GetAllPaged = @"
+        SELECT CourseId AS Id, CourseCode, CourseName, CourseNameAr, Description, 
+               DescriptionAr, Credits, Semester, SemesterYear, SemesterStartDate, 
+               MaxCapacity, IsActive, CreatedAt, UpdatedAt
+        FROM Courses
+        ORDER BY CourseName
+        OFFSET @Offset ROWS
+        FETCH NEXT @PageSize ROWS ONLY";
+
+    public const string GetAllActivePaged = @"
+        SELECT CourseId AS Id, CourseCode, CourseName, CourseNameAr, Description, 
+               DescriptionAr, Credits, Semester, SemesterYear, SemesterStartDate, 
+               MaxCapacity, IsActive, CreatedAt, UpdatedAt
+        FROM Courses
+        WHERE IsActive = 1
+        ORDER BY CourseName
+        OFFSET @Offset ROWS
+        FETCH NEXT @PageSize ROWS ONLY";
+
+    public const string GetCount = @"
+        SELECT COUNT(*)
+        FROM Courses";
+
+    public const string GetActiveCount = @"
+        SELECT COUNT(*)
+        FROM Courses
+        WHERE IsActive = 1";
 }

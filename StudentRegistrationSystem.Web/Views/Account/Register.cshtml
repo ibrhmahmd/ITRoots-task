@@ -1,8 +1,18 @@
 @using StudentRegistrationSystem.Web.ViewModels.Account
+@using StudentRegistrationSystem.Domain.Enums
+@using Microsoft.AspNetCore.Mvc.Rendering
 @model RegisterViewModel
 
 @{
     ViewData["Title"] = "Register";
+    var academicYearOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Text = "First Year", Value = "1" },
+        new SelectListItem { Text = "Second Year", Value = "2" },
+        new SelectListItem { Text = "Third Year", Value = "3" },
+        new SelectListItem { Text = "Fourth Year", Value = "4" },
+        new SelectListItem { Text = "Graduate", Value = "5" }
+    };
 }
 
 <div class="row justify-content-center mt-5">
@@ -41,6 +51,20 @@
                             <label asp-for="ConfirmPassword" class="form-label"></label>
                             <input asp-for="ConfirmPassword" class="form-control" />
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="AcademicYear" class="form-label"></label>
+                            <select asp-for="AcademicYear" class="form-select" asp-items="academicYearOptions">
+                                <option value="">-- Select Academic Year --</option>
+                            </select>
+                            <span asp-validation-for="AcademicYear" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="d-grid">

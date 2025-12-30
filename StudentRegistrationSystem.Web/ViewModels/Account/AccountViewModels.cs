@@ -45,6 +45,8 @@ public class RegisterViewModel
     [Display(Name = "Phone")]
     public string? Phone { get; set; }
 
+    [Required(ErrorMessage = "Academic Year is required")]
     [Display(Name = "Academic Year")]
+    [Range(1, 5, ErrorMessage = "Please select a valid academic year")]
     public int? AcademicYear { get; set; }
 }

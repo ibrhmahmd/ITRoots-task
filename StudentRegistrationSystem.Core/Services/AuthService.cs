@@ -52,6 +52,10 @@ public class AuthService : IAuthService
             throw new DuplicateException("Email already exists");
         }
 
+        // Generate email verification token
+        var verificationToken = Guid.NewGuid().ToString();
+        var tokenExpiry = DateTime.UtcNow.AddHours(24); // Token expires in 24 hours
+
         // Create new user
         var user = new User
         {
@@ -61,6 +65,8 @@ public class AuthService : IAuthService
             Email = email,
             Role = UserRole.Student,
             IsEmailVerified = false,
+            EmailVerificationToken = verificationToken,
+            EmailVerificationTokenExpiry = tokenExpiry,
             IsActive = true,
             CreatedAt = DateTime.UtcNow
         };
@@ -79,6 +85,11 @@ public class AuthService : IAuthService
         };
 
         await _studentRepository.CreateAsync(student);
+
+        // Send verification email
+        var baseUrl = GetBaseUrl();
+        var verificationLink = $"{baseUrl.TrimEnd('/')}/Account/VerifyEmail?token={verificationToken}";
+        await _emailService.SendVerificationEmailAsync(email, fullName, verificationLink);
 
         return new UserDto
         {
@@ -104,6 +115,12 @@ public class AuthService : IAuthService
         if (!PasswordHasher.VerifyPassword(password, user.PasswordHash))
         {
             return null;
+        }
+
+        // Check if email is verified
+        if (!user.IsEmailVerified)
+        {
+            throw new BusinessException("Please verify your email address before logging in. Check your inbox for the verification email.");
         }
 
         return new UserDto

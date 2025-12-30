@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StudentRegistrationSystem.Domain.Common;
 using StudentRegistrationSystem.Domain.Entities;
 
 namespace StudentRegistrationSystem.Domain.Interfaces.Repositories;
@@ -54,4 +55,24 @@ public interface ICourseRepository
     /// Checks if course code exists
     /// </summary>
     Task<bool> CourseCodeExistsAsync(string courseCode, string? excludeId = null);
+
+    /// <summary>
+    /// Gets paginated courses (including inactive)
+    /// </summary>
+    Task<PagedResult<Course>> GetAllPagedAsync(PaginationParameters parameters);
+
+    /// <summary>
+    /// Gets paginated active courses
+    /// </summary>
+    Task<PagedResult<Course>> GetAllActivePagedAsync(PaginationParameters parameters);
+
+    /// <summary>
+    /// Gets total count of all courses
+    /// </summary>
+    Task<int> GetCountAsync();
+
+    /// <summary>
+    /// Gets total count of active courses
+    /// </summary>
+    Task<int> GetActiveCountAsync();
 }
