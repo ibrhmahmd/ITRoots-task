@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using StudentRegistrationSystem.Core.Exceptions;
 using StudentRegistrationSystem.Core.Helpers;
@@ -8,9 +8,6 @@ using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
 namespace StudentRegistrationSystem.Core.Services;
 
-/// <summary>
-/// Service for password reset operations
-/// </summary>
 public class PasswordService : IPasswordService
 {
     private readonly IPasswordResetTokenRepository _tokenRepository;

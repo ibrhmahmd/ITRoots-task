@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +10,6 @@ using StudentRegistrationSystem.Core.Interfaces;
 
 namespace StudentRegistrationSystem.Core.Services;
 
-/// <summary>
-/// Service for registration operations
-/// </summary>
 public class RegistrationService : IRegistrationService
 {
     private readonly IRegistrationRepository _registrationRepository;

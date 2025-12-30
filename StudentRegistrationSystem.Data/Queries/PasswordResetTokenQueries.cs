@@ -1,8 +1,5 @@
-namespace StudentRegistrationSystem.Data.Queries;
+﻿namespace StudentRegistrationSystem.Data.Queries;
 
-/// <summary>
-/// SQL queries for PasswordResetToken entity operations
-/// </summary>
 public static class PasswordResetTokenQueries
 {
     public const string GetById = @"

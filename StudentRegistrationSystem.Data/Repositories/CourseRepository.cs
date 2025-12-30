@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
@@ -11,9 +11,6 @@ using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
 namespace StudentRegistrationSystem.Data.Repositories;
 
-/// <summary>
-/// Repository implementation for Course entity using Dapper
-/// </summary>
 public class CourseRepository : ICourseRepository
 {
     private readonly IDbConnectionFactory _connectionFactory;

@@ -1,8 +1,5 @@
-namespace StudentRegistrationSystem.Data.Queries;
+﻿namespace StudentRegistrationSystem.Data.Queries;
 
-/// <summary>
-/// SQL queries for Student entity operations
-/// </summary>
 public static class StudentQueries
 {
     public const string GetById = @"
