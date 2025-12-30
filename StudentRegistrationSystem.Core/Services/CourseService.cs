@@ -11,6 +11,9 @@ using StudentRegistrationSystem.Core.Interfaces;
 
 namespace StudentRegistrationSystem.Core.Services;
 
+/// <summary>
+/// Service for course operations
+/// </summary>
 public class CourseService : ICourseService
 {
     private readonly ICourseRepository _courseRepository;
