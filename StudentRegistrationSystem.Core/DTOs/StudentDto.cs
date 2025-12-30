@@ -3,9 +3,6 @@ using StudentRegistrationSystem.Domain.Enums;
 
 namespace StudentRegistrationSystem.Core.DTOs;
 
-/// <summary>
-/// Data Transfer Object for Student entity
-/// </summary>
 public class StudentDto
 {
     public string Id { get; set; } = string.Empty;
