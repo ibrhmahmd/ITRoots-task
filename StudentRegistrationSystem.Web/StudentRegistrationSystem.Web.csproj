@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StudentRegistrationSystem.Core\StudentRegistrationSystem.Core.csproj" />
+    <ProjectReference Include="..\StudentRegistrationSystem.Data\StudentRegistrationSystem.Data.csproj" />
+    <ProjectReference Include="..\StudentRegistrationSystem.Domain\StudentRegistrationSystem.Domain.csproj" />
+  </ItemGroup>
+</Project>
