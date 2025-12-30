@@ -1,10 +1,27 @@
 namespace StudentRegistrationSystem.Domain.Common;
 
 /// <summary>
+/// Non-generic interface for pagination to support covariance
+/// </summary>
+public interface IPagedResult
+{
+    int TotalCount { get; }
+    int PageNumber { get; }
+    int PageSize { get; }
+    int TotalPages { get; }
+    bool HasPreviousPage { get; }
+    bool HasNextPage { get; }
+    bool IsFirstPage { get; }
+    bool IsLastPage { get; }
+    int StartRecord { get; }
+    int EndRecord { get; }
+}
+
+/// <summary>
 /// Generic paginated result model
 /// </summary>
 /// <typeparam name="T">The type of items in the result</typeparam>
-public class PagedResult<T>
+public class PagedResult<T> : IPagedResult
 {
     /// <summary>
     /// The items for the current page

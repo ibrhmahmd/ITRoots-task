@@ -1,5 +1,6 @@
+@using Microsoft.AspNetCore.Mvc.RazorPages
 @using StudentRegistrationSystem.Domain.Common
-@model PagedResult<object>
+@model IPagedResult
 
 @if (Model != null && Model.TotalPages > 1)
 {
