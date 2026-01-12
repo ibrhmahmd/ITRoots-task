@@ -1,32 +1,33 @@
-@{
-    ViewData["Title"] = "Verification Email Sent";
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> Localizer
+    ViewData["Title"] = Localizer["VerificationEmailSentTitle"];
 }
 
-<div class="row justify-content-center">
+<div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 150px);">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-header bg-success text-white text-center">
-                <h4 class="mb-0">Email Sent</h4>
+                <h4 class="mb-0">@Localizer["EmailSentHeader"]</h4>
             </div>
             <div class="card-body text-center">
                 <div class="mb-3">
                     <i class="bi bi-envelope-check" style="font-size: 3rem; color: #28a745;"></i>
                 </div>
-                <h5 class="mb-3">Verification Email Sent!</h5>
-                <p class="mb-3">A verification email has been sent to your email address.</p>
+                <h5 class="mb-3">@Localizer["VerificationEmailSentHeader"]</h5>
+                <p class="mb-3">@Localizer["VerificationEmailSentBody"]</p>
                 <p class="text-muted small mb-3">
-                    Please check your inbox (and spam folder) and click the verification link to activate your account.
+                    @Localizer["CheckInboxBody"]
                 </p>
                 <p class="text-muted small">
-                    <strong>Important:</strong> You must verify your email before you can log in.
+                    <strong>@Localizer["VerificationImportant"]</strong>
                 </p>
                 
                 <hr class="my-4" />
                 
                 <div class="d-grid gap-2">
-                    <a asp-action="Login" class="btn btn-primary">Go to Login</a>
+                    <a asp-action="Login" class="btn btn-primary">@Localizer["GoToLogin"]</a>
                     <p class="text-muted small mt-2 mb-0">
-                        Didn't receive the email? Check your spam folder or contact support.
+                        @Localizer["EmailNotReceived"]
                     </p>
                 </div>
             </div>

@@ -12,7 +12,7 @@ public class PasswordResetToken : BaseEntity
 
     public bool IsUsed { get; set; }
 
-    // Navigation property (optional)
+    // Navigation property 
     public User? User { get; set; }
 }
 

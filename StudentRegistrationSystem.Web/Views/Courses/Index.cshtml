@@ -3,19 +3,19 @@
 @model BrowseCoursesViewModel
 
 @{
-    ViewData["Title"] = "Browse Courses";
+    ViewData["Title"] = Localizer["BrowseCourses"];
     var pageSize = Model.AvailableCourses.PageSize;
 }
 
-<h2 class="mb-4">Course Registration</h2>
+<h2 class="mb-4">@Localizer["CourseRegistration"]</h2>
 
 <div class="row">
     <div class="col-md-8">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0">Available Courses</h4>
+            <h4 class="mb-0">@Localizer["AvailableCourses"]</h4>
             <div>
                 <form method="get" class="d-inline-flex align-items-center">
-                    <label for="pageSize" class="me-2 small">Show:</label>
+                    <label for="pageSize" class="me-2 small">@Localizer["Show"]:</label>
                     <select name="pageSize" id="pageSize" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
                         <option value="10" selected="@(pageSize == 10)">10</option>
                         <option value="25" selected="@(pageSize == 25)">25</option>
@@ -29,10 +29,10 @@
             <table class="table table-hover border">
                 <thead class="table-light">
                     <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Credits</th>
-                        <th>Action</th>
+                        <th>@Localizer["CourseCode"]</th>
+                        <th>@Localizer["CourseName"]</th>
+                        <th>@Localizer["Credits"]</th>
+                        <th>@Localizer["Action"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,7 +45,7 @@
                             <td>
                                 <form asp-action="Register" method="post">
                                     <input type="hidden" name="courseId" value="@course.Id" />
-                                    <button type="submit" class="btn btn-sm btn-primary">Register</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">@Localizer["RegisterAction"]</button>
                                 </form>
                             </td>
                         </tr>
@@ -65,7 +65,7 @@
         @if (!Model.AvailableCourses.Items.Any())
         {
             <div class="alert alert-info mt-3">
-                <p class="mb-0">No available courses found.</p>
+                <p class="mb-0">@Localizer["NoAvailableCourses"]</p>
             </div>
         }
     </div>
@@ -73,7 +73,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header bg-info text-white">
-                <h5 class="mb-0">My Registrations</h5>
+                <h5 class="mb-0">@Localizer["MyRegistrations"]</h5>
             </div>
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
@@ -87,14 +87,14 @@
                             <form asp-action="Unregister" method="post">
                                 <input type="hidden" name="courseId" value="@course.Id" />
                                 <button type="submit" class="btn btn-sm btn-outline-danger border-0">
-                                    <i class="bi bi-trash"></i> Unregister
+                                    <i class="bi bi-trash"></i> @Localizer["Unregister"]
                                 </button>
                             </form>
                         </li>
                     }
                     @if (!Model.RegisteredCourses.Any())
                     {
-                        <li class="list-group-item text-muted">No courses registered.</li>
+                        <li class="list-group-item text-muted">@Localizer["NoCoursesRegistered"]</li>
                     }
                 </ul>
             </div>

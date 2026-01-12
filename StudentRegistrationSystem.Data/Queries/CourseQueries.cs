@@ -76,7 +76,7 @@ public static class CourseQueries
                DescriptionAr, Credits, Semester, SemesterYear, SemesterStartDate, 
                MaxCapacity, IsActive, CreatedAt, UpdatedAt
         FROM Courses
-        ORDER BY CourseName
+        ORDER BY CreatedAt DESC
         OFFSET @Offset ROWS
         FETCH NEXT @PageSize ROWS ONLY";
 
@@ -86,7 +86,7 @@ public static class CourseQueries
                MaxCapacity, IsActive, CreatedAt, UpdatedAt
         FROM Courses
         WHERE IsActive = 1
-        ORDER BY CourseName
+        ORDER BY CreatedAt DESC
         OFFSET @Offset ROWS
         FETCH NEXT @PageSize ROWS ONLY";
 

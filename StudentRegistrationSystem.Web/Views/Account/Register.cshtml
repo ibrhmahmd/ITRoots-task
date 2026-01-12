@@ -1,25 +1,27 @@
 @using StudentRegistrationSystem.Web.ViewModels.Account
 @using StudentRegistrationSystem.Domain.Enums
 @using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> Localizer
 @model RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = Localizer["Register"];
     var academicYearOptions = new List<SelectListItem>
     {
-        new SelectListItem { Text = "First Year", Value = "1" },
-        new SelectListItem { Text = "Second Year", Value = "2" },
-        new SelectListItem { Text = "Third Year", Value = "3" },
-        new SelectListItem { Text = "Fourth Year", Value = "4" },
-        new SelectListItem { Text = "Graduate", Value = "5" }
+        new SelectListItem { Text = Localizer["FirstYear"].Value, Value = "1" },
+        new SelectListItem { Text = Localizer["SecondYear"].Value, Value = "2" },
+        new SelectListItem { Text = Localizer["ThirdYear"].Value, Value = "3" },
+        new SelectListItem { Text = Localizer["FourthYear"].Value, Value = "4" },
+        new SelectListItem { Text = Localizer["Graduate"].Value, Value = "5" }
     };
 }
 
-<div class="row justify-content-center mt-5">
+<div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 150px);">
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Register</h4>
+                <h4 class="mb-0">@Localizer["Register"]</h4>
             </div>
             <div class="card-body">
                 <form asp-action="Register" method="post">
@@ -62,18 +64,18 @@
                         <div class="col-md-6 mb-3">
                             <label asp-for="AcademicYear" class="form-label"></label>
                             <select asp-for="AcademicYear" class="form-select" asp-items="academicYearOptions">
-                                <option value="">-- Select Academic Year --</option>
+                                <option value="">@Localizer["SelectAcademicYear"]</option>
                             </select>
                             <span asp-validation-for="AcademicYear" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-success">Register</button>
+                        <button type="submit" class="btn btn-success">@Localizer["Register"]</button>
                     </div>
                 </form>
             </div>
             <div class="card-footer text-center">
-                <p class="mb-0">Already have an account? <a asp-action="Login">Login here</a></p>
+                <p class="mb-0"><a asp-action="Login">@Localizer["AlreadyHaveAccount"]</a></p>
             </div>
         </div>
     </div>

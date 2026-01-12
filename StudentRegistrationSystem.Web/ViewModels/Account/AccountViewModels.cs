@@ -50,3 +50,5 @@ public class RegisterViewModel
     [Range(1, 5, ErrorMessage = "Please select a valid academic year")]
     public int? AcademicYear { get; set; }
 }
+
+

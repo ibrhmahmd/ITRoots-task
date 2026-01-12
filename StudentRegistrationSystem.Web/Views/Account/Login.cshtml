@@ -4,7 +4,7 @@
     Layout = "_Layout";
 }
 
-<div class="row justify-content-center">
+<div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 150px);">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white text-center">
@@ -36,13 +36,13 @@
 
                     <div class="mb-3">
                         <label asp-for="Username" class="form-label"></label>
-                        <input asp-for="Username" class="form-control" placeholder="Enter your username" />
+                        <input asp-for="Username" class="form-control" placeholder="@Localizer["EnterUsername"]" />
                         <span asp-validation-for="Username" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control" placeholder="Enter your password" />
+                        <input asp-for="Password" class="form-control" placeholder="@Localizer["EnterPassword"]" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Sign In</button>
+                        <button type="submit" class="btn btn-primary">@Localizer["SignIn"]</button>
                     </div>
                 </form>
 
@@ -63,12 +63,12 @@
                 <div class="text-center">
                     <p class="mb-2">
                         <a asp-action="Register" asp-controller="Account" class="text-decoration-none">
-                            Don't have an account? Register here
+                            @Localizer["RegisterHere"]
                         </a>
                     </p>
                     <p class="mb-0">
                         <a asp-action="ForgotPassword" asp-controller="Account" class="text-decoration-none">
-                            Forgot your password?
+                            @Localizer["ForgotPasswordLink"]
                         </a>
                     </p>
                 </div>

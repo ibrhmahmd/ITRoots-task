@@ -568,4 +568,4 @@
   <data name="Copyright" xml:space="preserve">
     <value>جميع الحقوق محفوظة</value>
   </data>
-</root>
+  <data name="AdminPanel" xml:space="preserve"><value>لوحة الإدارة</value></data> <data name="BackToSite" xml:space="preserve"><value>العودة للموقع</value></data> <data name="Hello" xml:space="preserve"><value>مرحبا</value></data> </root>
