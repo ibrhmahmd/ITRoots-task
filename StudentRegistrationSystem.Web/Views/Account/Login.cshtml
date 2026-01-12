@@ -1,6 +1,8 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> Localizer
 @model StudentRegistrationSystem.Web.ViewModels.Account.LoginViewModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = @Localizer["Login"];
     Layout = "_Layout";
 }
 
@@ -35,13 +37,13 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="mb-3">
-                        <label asp-for="Username" class="form-label"></label>
+                        <label class="form-label">@Localizer["Username"]</label>
                         <input asp-for="Username" class="form-control" placeholder="@Localizer["EnterUsername"]" />
                         <span asp-validation-for="Username" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
+                        <label class="form-label">@Localizer["Password"]</label>
                         <input asp-for="Password" class="form-control" placeholder="@Localizer["EnterPassword"]" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
@@ -49,7 +51,7 @@
                     <div class="mb-3 form-check">
                         <input asp-for="RememberMe" class="form-check-input" />
                         <label asp-for="RememberMe" class="form-check-label">
-                            Remember me
+                            @Localizer["RememberMe"]
                         </label>
                     </div>
 

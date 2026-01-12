@@ -1,20 +1,23 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> Localizer
+
 @{
-    ViewData["Title"] = Localizer["Access Denied"];
+    ViewData["Title"] = Localizer["AccessDenied"];
 }
 
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-header bg-danger text-white text-center">
-                <h4 class="mb-0">Access Denied</h4>
+                <h4 class="mb-0">@Localizer["AccessDenied"]</h4>
             </div>
             <div class="card-body text-center">
-                <p class="mb-3">You do not have permission to access this resource.</p>
-                <p class="text-muted">Please contact an administrator if you believe this is an error.</p>
+                <p class="mb-3">@Localizer["AccessDeniedMessage"]</p>
+                <p class="text-muted">@Localizer["ContactAdministrator"]</p>
                 
                 <hr class="my-4" />
                 
-                <a asp-action="Index" asp-controller="Home" class="btn btn-primary">Go to Home</a>
+                <a asp-action="Index" asp-controller="Home" class="btn btn-primary">@Localizer["GoToHome"]</a>
             </div>
         </div>
     </div>

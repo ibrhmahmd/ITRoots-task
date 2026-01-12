@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> Localizer
+
 @{
     ViewData["Title"] = @Localizer["PrivacyPolicy"];
 }
