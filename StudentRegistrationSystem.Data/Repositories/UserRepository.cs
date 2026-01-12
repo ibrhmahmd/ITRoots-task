@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using StudentRegistrationSystem.Data.Context;
@@ -11,47 +12,47 @@ namespace StudentRegistrationSystem.Data.Repositories;
 
 public class UserRepository : BaseRepository, IUserRepository
 {
-    public UserRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
+    public UserRepository(IDbConnection connection, IDbTransaction? transaction) : base(connection, transaction)
     {
         UserMapper.Configure();
     }
 
     public async Task<User?> GetByIdAsync(string id)
     {
-        using var connection = CreateConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<User>(
+        var result = await Connection.QueryFirstOrDefaultAsync<User>(
             UserQueries.GetById,
-            new { Id = id }
+            new { Id = id },
+            transaction: _transaction
         );
         return result;
     }
 
     public async Task<User?> GetByUsernameAsync(string username)
     {
-        using var connection = CreateConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<User>(
+        var result = await Connection.QueryFirstOrDefaultAsync<User>(
             UserQueries.GetByUsername,
-            new { Username = username }
+            new { Username = username },
+            transaction: _transaction
         );
         return result;
     }
 
     public async Task<User?> GetByEmailAsync(string email)
     {
-        using var connection = CreateConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<User>(
+        var result = await Connection.QueryFirstOrDefaultAsync<User>(
             UserQueries.GetByEmail,
-            new { Email = email }
+            new { Email = email },
+            transaction: _transaction
         );
         return result;
     }
 
     public async Task<User?> GetByEmailVerificationTokenAsync(string token)
     {
-        using var connection = CreateConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<User>(
+        var result = await Connection.QueryFirstOrDefaultAsync<User>(
             UserQueries.GetByEmailVerificationToken,
-            new { Token = token }
+            new { Token = token },
+            transaction: _transaction
         );
         return result;
     }
@@ -69,8 +70,7 @@ public class UserRepository : BaseRepository, IUserRepository
             user.CreatedAt = DateTime.UtcNow;
         }
 
-        using var connection = CreateConnection();
-        await connection.ExecuteAsync(
+        await Connection.ExecuteAsync(
             UserQueries.Create,
             new
             {
@@ -85,15 +85,15 @@ public class UserRepository : BaseRepository, IUserRepository
                 user.IsActive,
                 user.CreatedAt,
                 user.UpdatedAt
-            }
+            },
+            transaction: _transaction
         );
         return user.Id;
     }
 
     public async Task<bool> UpdateAsync(User user)
     {
-        using var connection = CreateConnection();
-        var rowsAffected = await connection.ExecuteAsync(
+        var rowsAffected = await Connection.ExecuteAsync(
             UserQueries.Update,
             new
             {
@@ -107,27 +107,28 @@ public class UserRepository : BaseRepository, IUserRepository
                 user.EmailVerificationTokenExpiry,
                 user.IsActive,
                 UpdatedAt = DateTime.UtcNow
-            }
+            },
+            transaction: _transaction
         );
         return rowsAffected > 0;
     }
 
     public async Task<bool> UsernameExistsAsync(string username)
     {
-        using var connection = CreateConnection();
-        var count = await connection.QuerySingleAsync<int>(
+        var count = await Connection.QuerySingleAsync<int>(
             UserQueries.UsernameExists,
-            new { Username = username }
+            new { Username = username },
+            transaction: _transaction
         );
         return count > 0;
     }
 
     public async Task<bool> EmailExistsAsync(string email)
     {
-        using var connection = CreateConnection();
-        var count = await connection.QuerySingleAsync<int>(
+        var count = await Connection.QuerySingleAsync<int>(
             UserQueries.EmailExists,
-            new { Email = email }
+            new { Email = email },
+            transaction: _transaction
         );
         return count > 0;
     }

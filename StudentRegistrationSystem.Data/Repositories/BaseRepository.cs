@@ -5,14 +5,14 @@ namespace StudentRegistrationSystem.Data.Repositories;
 
 public abstract class BaseRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
+    protected readonly IDbConnection _connection;
+    protected readonly IDbTransaction? _transaction;
 
-    protected BaseRepository(IDbConnectionFactory connectionFactory)
+    protected BaseRepository(IDbConnection connection, IDbTransaction? transaction)
     {
-        _connectionFactory = connectionFactory;
+        _connection = connection;
+        _transaction = transaction;
     }
-    protected IDbConnection CreateConnection()
-    {
-        return _connectionFactory.CreateConnection();
-    }
+
+    protected IDbConnection Connection => _connection;
 }

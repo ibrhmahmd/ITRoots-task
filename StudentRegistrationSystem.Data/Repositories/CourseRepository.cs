@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
-using StudentRegistrationSystem.Data.Context;
 using StudentRegistrationSystem.Data.Mappers;
 using StudentRegistrationSystem.Data.Queries;
 using StudentRegistrationSystem.Domain.Common;
@@ -11,46 +11,41 @@ using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 
 namespace StudentRegistrationSystem.Data.Repositories;
 
-public class CourseRepository : ICourseRepository
+public class CourseRepository : BaseRepository, ICourseRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
-
-    public CourseRepository(IDbConnectionFactory connectionFactory)
+    public CourseRepository(IDbConnection connection, IDbTransaction? transaction) : base(connection, transaction)
     {
-        _connectionFactory = connectionFactory;
         CourseMapper.Configure();
     }
 
     public async Task<Course?> GetByIdAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<Course>(
+        var result = await Connection.QueryFirstOrDefaultAsync<Course>(
             CourseQueries.GetById,
-            new { Id = id }
+            new { Id = id },
+            transaction: _transaction
         );
         return result;
     }
 
     public async Task<IEnumerable<Course>> GetAllActiveAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
-        var results = await connection.QueryAsync<Course>(CourseQueries.GetAllActive);
+        var results = await Connection.QueryAsync<Course>(CourseQueries.GetAllActive, transaction: _transaction);
         return results;
     }
 
     public async Task<IEnumerable<Course>> GetAllAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
-        var results = await connection.QueryAsync<Course>(CourseQueries.GetAll);
+        var results = await Connection.QueryAsync<Course>(CourseQueries.GetAll, transaction: _transaction);
         return results;
     }
 
     public async Task<IEnumerable<Course>> GetBySemesterAsync(string semester, int semesterYear)
     {
-        using var connection = _connectionFactory.CreateConnection();
-        var results = await connection.QueryAsync<Course>(
+        var results = await Connection.QueryAsync<Course>(
             CourseQueries.GetBySemester,
-            new { Semester = semester, SemesterYear = semesterYear }
+            new { Semester = semester, SemesterYear = semesterYear },
+            transaction: _transaction
         );
         return results;
     }
@@ -68,8 +63,7 @@ public class CourseRepository : ICourseRepository
             course.CreatedAt = DateTime.UtcNow;
         }
 
-        using var connection = _connectionFactory.CreateConnection();
-        await connection.ExecuteAsync(
+        await Connection.ExecuteAsync(
             CourseQueries.Create,
             new
             {
@@ -87,15 +81,15 @@ public class CourseRepository : ICourseRepository
                 course.IsActive,
                 course.CreatedAt,
                 course.UpdatedAt
-            }
+            },
+            transaction: _transaction
         );
         return course.Id;
     }
 
     public async Task<bool> UpdateAsync(Course course)
     {
-        using var connection = _connectionFactory.CreateConnection();
-        var rowsAffected = await connection.ExecuteAsync(
+        var rowsAffected = await Connection.ExecuteAsync(
             CourseQueries.Update,
             new
             {
@@ -112,37 +106,38 @@ public class CourseRepository : ICourseRepository
                 course.MaxCapacity,
                 course.IsActive,
                 UpdatedAt = DateTime.UtcNow
-            }
+            },
+            transaction: _transaction
         );
         return rowsAffected > 0;
     }
 
     public async Task<bool> DeleteAsync(string id)
     {
-        using var connection = _connectionFactory.CreateConnection();
-        var rowsAffected = await connection.ExecuteAsync(
+        var rowsAffected = await Connection.ExecuteAsync(
             CourseQueries.Delete,
-            new { Id = id, UpdatedAt = DateTime.UtcNow }
+            new { Id = id, UpdatedAt = DateTime.UtcNow },
+            transaction: _transaction
         );
         return rowsAffected > 0;
     }
 
     public async Task<bool> HasRegistrationsAsync(string courseId)
     {
-        using var connection = _connectionFactory.CreateConnection();
-        var count = await connection.QuerySingleAsync<int>(
+        var count = await Connection.QuerySingleAsync<int>(
             CourseQueries.HasRegistrations,
-            new { CourseId = courseId }
+            new { CourseId = courseId },
+            transaction: _transaction
         );
         return count > 0;
     }
 
     public async Task<bool> CourseCodeExistsAsync(string courseCode, string? excludeId = null)
     {
-        using var connection = _connectionFactory.CreateConnection();
-        var count = await connection.QuerySingleAsync<int>(
+        var count = await Connection.QuerySingleAsync<int>(
             CourseQueries.CourseCodeExists,
-            new { CourseCode = courseCode, ExcludeId = excludeId }
+            new { CourseCode = courseCode, ExcludeId = excludeId },
+            transaction: _transaction
         );
         return count > 0;
     }
@@ -151,15 +146,14 @@ public class CourseRepository : ICourseRepository
     {
         parameters.Validate();
 
-        using var connection = _connectionFactory.CreateConnection();
-
         // Get total count
-        var totalCount = await connection.QuerySingleAsync<int>(CourseQueries.GetCount);
+        var totalCount = await Connection.QuerySingleAsync<int>(CourseQueries.GetCount, transaction: _transaction);
 
         // Get paginated results
-        var items = await connection.QueryAsync<Course>(
+        var items = await Connection.QueryAsync<Course>(
             CourseQueries.GetAllPaged,
-            new { Offset = parameters.Skip, PageSize = parameters.Take }
+            new { Offset = parameters.Skip, PageSize = parameters.Take },
+            transaction: _transaction
         );
 
         return new PagedResult<Course>
@@ -175,15 +169,14 @@ public class CourseRepository : ICourseRepository
     {
         parameters.Validate();
 
-        using var connection = _connectionFactory.CreateConnection();
-
         // Get total count
-        var totalCount = await connection.QuerySingleAsync<int>(CourseQueries.GetActiveCount);
+        var totalCount = await Connection.QuerySingleAsync<int>(CourseQueries.GetActiveCount, transaction: _transaction);
 
         // Get paginated results
-        var items = await connection.QueryAsync<Course>(
+        var items = await Connection.QueryAsync<Course>(
             CourseQueries.GetAllActivePaged,
-            new { Offset = parameters.Skip, PageSize = parameters.Take }
+            new { Offset = parameters.Skip, PageSize = parameters.Take },
+            transaction: _transaction
         );
 
         return new PagedResult<Course>
@@ -197,13 +190,11 @@ public class CourseRepository : ICourseRepository
 
     public async Task<int> GetCountAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
-        return await connection.QuerySingleAsync<int>(CourseQueries.GetCount);
+        return await Connection.QuerySingleAsync<int>(CourseQueries.GetCount, transaction: _transaction);
     }
 
     public async Task<int> GetActiveCountAsync()
     {
-        using var connection = _connectionFactory.CreateConnection();
-        return await connection.QuerySingleAsync<int>(CourseQueries.GetActiveCount);
+        return await Connection.QuerySingleAsync<int>(CourseQueries.GetActiveCount, transaction: _transaction);
     }
 }

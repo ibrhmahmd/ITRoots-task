@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
@@ -12,36 +13,36 @@ namespace StudentRegistrationSystem.Data.Repositories;
 
 public class PasswordResetTokenRepository : BaseRepository, IPasswordResetTokenRepository
 {
-    public PasswordResetTokenRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
+    public PasswordResetTokenRepository(IDbConnection connection, IDbTransaction? transaction) : base(connection, transaction)
     {
     }
 
     public async Task<PasswordResetToken?> GetByIdAsync(string id)
     {
-        using var connection = CreateConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<PasswordResetToken>(
+        var result = await Connection.QueryFirstOrDefaultAsync<PasswordResetToken>(
             PasswordResetTokenQueries.GetById,
-            new { Id = id }
+            new { Id = id },
+            transaction: _transaction
         );
         return result;
     }
 
     public async Task<PasswordResetToken?> GetByTokenAsync(string token)
     {
-        using var connection = CreateConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<PasswordResetToken>(
+        var result = await Connection.QueryFirstOrDefaultAsync<PasswordResetToken>(
             PasswordResetTokenQueries.GetByToken,
-            new { Token = token }
+            new { Token = token },
+            transaction: _transaction
         );
         return result;
     }
 
     public async Task<IEnumerable<PasswordResetToken>> GetActiveByUserIdAsync(string userId)
     {
-        using var connection = CreateConnection();
-        var results = await connection.QueryAsync<PasswordResetToken>(
+        var results = await Connection.QueryAsync<PasswordResetToken>(
             PasswordResetTokenQueries.GetActiveByUserId,
-            new { UserId = userId }
+            new { UserId = userId },
+            transaction: _transaction
         );
         return results;
     }
@@ -59,8 +60,7 @@ public class PasswordResetTokenRepository : BaseRepository, IPasswordResetTokenR
             token.CreatedAt = DateTime.UtcNow;
         }
 
-        using var connection = CreateConnection();
-        await connection.ExecuteAsync(
+        await Connection.ExecuteAsync(
             PasswordResetTokenQueries.Create,
             new
             {
@@ -70,15 +70,15 @@ public class PasswordResetTokenRepository : BaseRepository, IPasswordResetTokenR
                 token.ExpiresAt,
                 token.IsUsed,
                 token.CreatedAt
-            }
+            },
+            transaction: _transaction
         );
         return token.Id;
     }
 
     public async Task<bool> UpdateAsync(PasswordResetToken token)
     {
-        using var connection = CreateConnection();
-        var rowsAffected = await connection.ExecuteAsync(
+        var rowsAffected = await Connection.ExecuteAsync(
             PasswordResetTokenQueries.Update,
             new
             {
@@ -86,25 +86,25 @@ public class PasswordResetTokenRepository : BaseRepository, IPasswordResetTokenR
                 token.Token,
                 token.ExpiresAt,
                 token.IsUsed
-            }
+            },
+            transaction: _transaction
         );
         return rowsAffected > 0;
     }
 
     public async Task<bool> MarkAsUsedAsync(string tokenId)
     {
-        using var connection = CreateConnection();
-        var rowsAffected = await connection.ExecuteAsync(
+        var rowsAffected = await Connection.ExecuteAsync(
             PasswordResetTokenQueries.MarkAsUsed,
-            new { Id = tokenId }
+            new { Id = tokenId },
+            transaction: _transaction
         );
         return rowsAffected > 0;
     }
 
     public async Task<int> DeleteExpiredTokensAsync()
     {
-        using var connection = CreateConnection();
-        var rowsAffected = await connection.ExecuteAsync(PasswordResetTokenQueries.DeleteExpired);
+        var rowsAffected = await Connection.ExecuteAsync(PasswordResetTokenQueries.DeleteExpired, transaction: _transaction);
         return rowsAffected;
     }
 }
