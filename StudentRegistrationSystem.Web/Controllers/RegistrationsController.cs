@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentRegistrationSystem.Core.Interfaces;
-using StudentRegistrationSystem.Domain.Interfaces.Repositories;
 using StudentRegistrationSystem.Web.ViewModels.Registrations;
 
 namespace StudentRegistrationSystem.Web.Controllers;
@@ -14,22 +13,22 @@ public class RegistrationsController : Controller
 {
     private readonly IRegistrationService _registrationService;
     private readonly ICourseService _courseService;
-    private readonly IStudentRepository _studentRepository;
+    private readonly IStudentService _studentService;
 
     public RegistrationsController(
         IRegistrationService registrationService,
         ICourseService courseService,
-        IStudentRepository studentRepository)
+        IStudentService studentService)
     {
         _registrationService = registrationService;
         _courseService = courseService;
-        _studentRepository = studentRepository;
+        _studentService = studentService;
     }
 
     public async Task<IActionResult> Index()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var student = await _studentRepository.GetByUserIdAsync(userId);
+        var student = await _studentService.GetByUserIdAsync(userId);
         if (student == null) return RedirectToAction("Login", "Account");
 
         var registrations = await _registrationService.GetActiveByStudentIdAsync(student.Id);

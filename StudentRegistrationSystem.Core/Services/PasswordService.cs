@@ -1,49 +1,50 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using StudentRegistrationSystem.Core.Exceptions;
 using StudentRegistrationSystem.Core.Helpers;
 using StudentRegistrationSystem.Core.Interfaces;
 using StudentRegistrationSystem.Domain.Entities;
-using StudentRegistrationSystem.Domain.Interfaces.Repositories;
+using StudentRegistrationSystem.Domain.Interfaces;
 
 namespace StudentRegistrationSystem.Core.Services;
 
 public class PasswordService : IPasswordService
 {
-    private readonly IPasswordResetTokenRepository _tokenRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger<PasswordService> _logger;
 
-    public PasswordService(
-        IPasswordResetTokenRepository tokenRepository,
-        IUserRepository userRepository)
+    public PasswordService(IUnitOfWork unitOfWork, ILogger<PasswordService> logger)
     {
-        _tokenRepository = tokenRepository;
-        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
+        _logger = logger;
     }
 
     public async Task<string> GeneratePasswordResetTokenAsync(string userId)
     {
         // Generate token
-        var token = Guid.NewGuid().ToString();
+        var token = TokenGenerator.GenerateToken();
 
         // Create token entity
         var passwordResetToken = new PasswordResetToken
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = TokenGenerator.GenerateToken(),
             UserId = userId,
             Token = token,
-            ExpiresAt = DateTime.UtcNow.AddHours(1), // Token expires in 1 hour
+            ExpiresAt = DateTimeHelper.AddHours(1), // Token expires in 1 hour
             IsUsed = false,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTimeHelper.UtcNow
         };
 
-        await _tokenRepository.CreateAsync(passwordResetToken);
+        await _unitOfWork.PasswordResetTokens.CreateAsync(passwordResetToken);
+        _logger.LogInformation("Password reset token generated for user {UserId}", userId);
+        
         return token;
     }
 
     public async Task<bool> ValidateTokenAsync(string token)
     {
-        var tokenEntity = await _tokenRepository.GetByTokenAsync(token);
+        var tokenEntity = await _unitOfWork.PasswordResetTokens.GetByTokenAsync(token);
         
         if (tokenEntity == null)
         {
@@ -55,7 +56,7 @@ public class PasswordService : IPasswordService
             return false;
         }
 
-        if (tokenEntity.ExpiresAt < DateTime.UtcNow)
+        if (DateTimeHelper.IsPast(tokenEntity.ExpiresAt))
         {
             return false;
         }
@@ -66,7 +67,7 @@ public class PasswordService : IPasswordService
     public async Task<bool> ResetPasswordAsync(string token, string newPassword)
     {
         // Validate token
-        var tokenEntity = await _tokenRepository.GetByTokenAsync(token);
+        var tokenEntity = await _unitOfWork.PasswordResetTokens.GetByTokenAsync(token);
         
         if (tokenEntity == null)
         {
@@ -78,13 +79,13 @@ public class PasswordService : IPasswordService
             throw new BusinessException("Token has already been used");
         }
 
-        if (tokenEntity.ExpiresAt < DateTime.UtcNow)
+        if (DateTimeHelper.IsPast(tokenEntity.ExpiresAt))
         {
             throw new BusinessException("Token has expired");
         }
 
         // Get user
-        var user = await _userRepository.GetByIdAsync(tokenEntity.UserId);
+        var user = await _unitOfWork.Users.GetByIdAsync(tokenEntity.UserId);
         if (user == null)
         {
             throw new NotFoundException("User not found");
@@ -92,14 +93,15 @@ public class PasswordService : IPasswordService
 
         // Update password
         user.PasswordHash = PasswordHasher.HashPassword(newPassword);
-        user.UpdatedAt = DateTime.UtcNow;
+        user.UpdatedAt = DateTimeHelper.UtcNow;
 
-        var updated = await _userRepository.UpdateAsync(user);
+        var updated = await _unitOfWork.Users.UpdateAsync(user);
         
         if (updated)
         {
             // Mark token as used
-            await _tokenRepository.MarkAsUsedAsync(tokenEntity.Id);
+            await _unitOfWork.PasswordResetTokens.MarkAsUsedAsync(tokenEntity.Id);
+            _logger.LogInformation("Password reset successfully for user {UserId}", user.Id);
         }
 
         return updated;

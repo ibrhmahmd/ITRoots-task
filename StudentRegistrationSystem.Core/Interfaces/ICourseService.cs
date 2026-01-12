@@ -15,5 +15,6 @@ public interface ICourseService
     Task<bool> DeleteAsync(string id);
     Task<PagedResult<CourseDto>> GetAllPagedAsync(PaginationParameters parameters);
     Task<PagedResult<CourseDto>> GetAllActivePagedAsync(PaginationParameters parameters);
+    Task<BrowseCoursesDto> GetBrowseCoursesAsync(string studentId, PaginationParameters parameters);
 }
 

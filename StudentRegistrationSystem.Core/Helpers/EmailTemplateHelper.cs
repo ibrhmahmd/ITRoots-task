@@ -38,7 +38,7 @@ public static class EmailTemplateHelper
             <p>If you didn't create an account, please ignore this email.</p>
         </div>
         <div class='footer'>
-            <p>© {DateTime.Now.Year} Student Registration System. All rights reserved.</p>
+            <p>© {DateTime.UtcNow.Year} Student Registration System. All rights reserved.</p>
         </div>
     </div>
 </body>
@@ -81,7 +81,7 @@ public static class EmailTemplateHelper
             </div>
         </div>
         <div class='footer'>
-            <p>© {DateTime.Now.Year} Student Registration System. All rights reserved.</p>
+            <p>© {DateTime.UtcNow.Year} Student Registration System. All rights reserved.</p>
         </div>
     </div>
 </body>
@@ -115,7 +115,7 @@ public static class EmailTemplateHelper
             <p>If you have any questions, please don't hesitate to contact us.</p>
         </div>
         <div class='footer'>
-            <p>© {DateTime.Now.Year} Student Registration System. All rights reserved.</p>
+            <p>© {DateTime.UtcNow.Year} Student Registration System. All rights reserved.</p>
         </div>
     </div>
 </body>

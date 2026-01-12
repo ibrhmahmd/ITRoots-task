@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using StudentRegistrationSystem.Core.DTOs;
 using StudentRegistrationSystem.Core.Exceptions;
 using StudentRegistrationSystem.Core.Helpers;
@@ -9,32 +10,32 @@ using StudentRegistrationSystem.Core.Interfaces;
 using StudentRegistrationSystem.Domain.Common;
 using StudentRegistrationSystem.Domain.Entities;
 using StudentRegistrationSystem.Domain.Enums;
-using StudentRegistrationSystem.Domain.Interfaces.Repositories;
+using StudentRegistrationSystem.Domain.Interfaces;
 
 namespace StudentRegistrationSystem.Core.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IStudentRepository _studentRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordService _passwordService;
     private readonly IEmailService _emailService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ILogger<AuthService> _logger;
     private readonly string _fallbackBaseUrl;
 
     public AuthService(
-        IUserRepository userRepository,
-        IStudentRepository studentRepository,
+        IUnitOfWork unitOfWork,
         IPasswordService passwordService,
         IEmailService emailService,
         IHttpContextAccessor httpContextAccessor,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ILogger<AuthService> logger)
     {
-        _userRepository = userRepository;
-        _studentRepository = studentRepository;
+        _unitOfWork = unitOfWork;
         _passwordService = passwordService;
         _emailService = emailService;
         _httpContextAccessor = httpContextAccessor;
+        _logger = logger;
         
         var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
         _fallbackBaseUrl = appSettings?.BaseUrl ?? "https://localhost:5001";
@@ -42,24 +43,25 @@ public class AuthService : IAuthService
 
     public async Task<UserDto> RegisterAsync(string fullName, string username, string password, string email, string? phone, int? academicYear)
     {
-        if (await _userRepository.UsernameExistsAsync(username))
+        // Check duplicates (Read operations, can be outside transaction or inside)
+        if (await _unitOfWork.Users.UsernameExistsAsync(username))
         {
             throw new DuplicateException("Username already exists");
         }
 
-        if (await _userRepository.EmailExistsAsync(email))
+        if (await _unitOfWork.Users.EmailExistsAsync(email))
         {
             throw new DuplicateException("Email already exists");
         }
 
         // Generate email verification token
-        var verificationToken = Guid.NewGuid().ToString();
-        var tokenExpiry = DateTime.UtcNow.AddHours(24); // Token expires in 24 hours
+        var verificationToken = TokenGenerator.GenerateToken();
+        var tokenExpiry = DateTimeHelper.AddHours(24);
 
-        // Create new user
+        // Create new user entity
         var user = new User
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = TokenGenerator.GenerateToken(),
             Username = username,
             PasswordHash = PasswordHasher.HashPassword(password),
             Email = email,
@@ -68,28 +70,51 @@ public class AuthService : IAuthService
             EmailVerificationToken = verificationToken,
             EmailVerificationTokenExpiry = tokenExpiry,
             IsActive = true,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTimeHelper.UtcNow
         };
 
-        var userId = await _userRepository.CreateAsync(user);
+        string userId;
 
-        var student = new Student
+        try
         {
-            Id = Guid.NewGuid().ToString(),
-            UserId = userId,
-            FullName = fullName,
-            Phone = phone,
-            AcademicYear = academicYear.HasValue ? (AcademicYear)academicYear.Value : AcademicYear.FirstYear,
-            EnrollmentDate = DateTime.UtcNow,
-            CreatedAt = DateTime.UtcNow
-        };
+            _unitOfWork.BeginTransaction();
 
-        await _studentRepository.CreateAsync(student);
+            userId = await _unitOfWork.Users.CreateAsync(user);
 
-        // Send verification email
-        var baseUrl = GetBaseUrl();
-        var verificationLink = $"{baseUrl.TrimEnd('/')}/Account/VerifyEmail?token={verificationToken}";
-        await _emailService.SendVerificationEmailAsync(email, fullName, verificationLink);
+            var student = new Student
+            {
+                Id = TokenGenerator.GenerateToken(),
+                UserId = userId,
+                FullName = fullName,
+                Phone = phone,
+                AcademicYear = academicYear.HasValue ? (AcademicYear)academicYear.Value : AcademicYear.FirstYear,
+                EnrollmentDate = DateTimeHelper.UtcNow,
+                CreatedAt = DateTimeHelper.UtcNow
+            };
+
+            await _unitOfWork.Students.CreateAsync(student);
+
+            _unitOfWork.Commit();
+            _logger.LogInformation("User {Username} registered successfully with ID {UserId}", username, userId);
+        }
+        catch (Exception ex)
+        {
+            _unitOfWork.Rollback();
+            _logger.LogError(ex, "Failed to register user {Username}", username);
+            throw;
+        }
+
+        // Send verification email (after commit)
+        try
+        {
+            var baseUrl = UrlHelper.GetBaseUrl(_httpContextAccessor.HttpContext, _fallbackBaseUrl);
+            var verificationLink = $"{baseUrl.TrimEnd('/')}/Account/VerifyEmail?token={verificationToken}";
+            await _emailService.SendVerificationEmailAsync(email, fullName, verificationLink);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to send verification email to {Email}. User was created successfully.", email);
+        }
 
         return new UserDto
         {
@@ -105,7 +130,7 @@ public class AuthService : IAuthService
 
     public async Task<UserDto?> LoginAsync(string username, string password)
     {
-        var user = await _userRepository.GetByUsernameAsync(username);
+        var user = await _unitOfWork.Users.GetByUsernameAsync(username);
         
         if (user == null || !user.IsActive)
         {
@@ -117,11 +142,12 @@ public class AuthService : IAuthService
             return null;
         }
 
-        // Check if email is verified
         if (!user.IsEmailVerified)
         {
             throw new BusinessException("Please verify your email address before logging in. Check your inbox for the verification email.");
         }
+
+        _logger.LogInformation("User {Username} logged in successfully", username);
 
         return new UserDto
         {
@@ -138,9 +164,9 @@ public class AuthService : IAuthService
 
     public async Task<bool> VerifyEmailAsync(string token)
     {
-        var user = await _userRepository.GetByEmailVerificationTokenAsync(token);
+        var user = await _unitOfWork.Users.GetByEmailVerificationTokenAsync(token);
         
-        if (user == null || user.EmailVerificationTokenExpiry < DateTime.UtcNow)
+        if (user == null || DateTimeHelper.IsPast(user.EmailVerificationTokenExpiry))
         {
             return false;
         }
@@ -148,41 +174,28 @@ public class AuthService : IAuthService
         user.IsEmailVerified = true;
         user.EmailVerificationToken = null;
         user.EmailVerificationTokenExpiry = null;
-        user.UpdatedAt = DateTime.UtcNow;
+        user.UpdatedAt = DateTimeHelper.UtcNow;
 
-        return await _userRepository.UpdateAsync(user);
+        _logger.LogInformation("Email verified for user {UserId}", user.Id);
+
+        return await _unitOfWork.Users.UpdateAsync(user);
     }
 
     public async Task<bool> SendPasswordResetEmailAsync(string email)
     {
-        var user = await _userRepository.GetByEmailAsync(email);
+        var user = await _unitOfWork.Users.GetByEmailAsync(email);
         
         if (user == null)
         {
-            // Don't reveal if email exists
             return true;
         }
 
         var token = await _passwordService.GeneratePasswordResetTokenAsync(user.Id);
         
-        var baseUrl = GetBaseUrl();
+        var baseUrl = UrlHelper.GetBaseUrl(_httpContextAccessor.HttpContext, _fallbackBaseUrl);
         var resetLink = $"{baseUrl.TrimEnd('/')}/Account/ResetPassword?token={token}";
         
         return await _emailService.SendPasswordResetEmailAsync(user.Email, user.Username, resetLink);
-    }
-
-    private string GetBaseUrl()
-    {
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext != null)
-        {
-            var request = httpContext.Request;
-            var scheme = request.Scheme;
-            var host = request.Host;
-            return $"{scheme}://{host}";
-        }
-        
-        return _fallbackBaseUrl;
     }
 
     public async Task<bool> ResetPasswordAsync(string token, string newPassword)

@@ -4,7 +4,7 @@ using StudentRegistrationSystem.Core.Services;
 using StudentRegistrationSystem.Data.Context;
 using StudentRegistrationSystem.Data.Repositories;
 using StudentRegistrationSystem.Domain.Common;
-using StudentRegistrationSystem.Domain.Interfaces.Repositories;
+using StudentRegistrationSystem.Domain.Interfaces;
 using StudentRegistrationSystem.Web.Extensions;
 using StudentRegistrationSystem.Web.Configuration;
 
@@ -25,15 +25,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddScoped<IDbConnectionFactory, DapperContext>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddSingleton(builder.Configuration.GetSection("AppSettings").Get<AppSettings>() ?? new AppSettings());
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
-builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -41,6 +36,7 @@ builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IRegistrationService, RegistrationService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 
 var app = builder.Build();
 
