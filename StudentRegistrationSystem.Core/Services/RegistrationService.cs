@@ -2,118 +2,150 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using StudentRegistrationSystem.Core.DTOs;
 using StudentRegistrationSystem.Core.Exceptions;
+using StudentRegistrationSystem.Core.Helpers;
 using StudentRegistrationSystem.Domain.Entities;
-using StudentRegistrationSystem.Domain.Interfaces.Repositories;
+using StudentRegistrationSystem.Domain.Enums;
+using StudentRegistrationSystem.Domain.Interfaces;
 using StudentRegistrationSystem.Core.Interfaces;
 
 namespace StudentRegistrationSystem.Core.Services;
 
 public class RegistrationService : IRegistrationService
 {
-    private readonly IRegistrationRepository _registrationRepository;
-    private readonly ICourseRepository _courseRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger<RegistrationService> _logger;
 
-    public RegistrationService(
-        IRegistrationRepository registrationRepository,
-        ICourseRepository courseRepository)
+    public RegistrationService(IUnitOfWork unitOfWork, ILogger<RegistrationService> logger)
     {
-        _registrationRepository = registrationRepository;
-        _courseRepository = courseRepository;
+        _unitOfWork = unitOfWork;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<RegistrationDto>> GetByStudentIdAsync(string studentId)
     {
-        var registrations = await _registrationRepository.GetByStudentIdAsync(studentId);
+        var registrations = await _unitOfWork.Registrations.GetByStudentIdAsync(studentId);
         return registrations.Select(MapToDto);
     }
 
     public async Task<IEnumerable<RegistrationDto>> GetActiveByStudentIdAsync(string studentId)
     {
-        var registrations = await _registrationRepository.GetActiveByStudentIdAsync(studentId);
+        var registrations = await _unitOfWork.Registrations.GetActiveByStudentIdAsync(studentId);
         return registrations.Select(MapToDto);
     }
 
     public async Task<RegistrationDto> RegisterAsync(string studentId, string courseId)
     {
-        // Check if already registered
-        if (await _registrationRepository.IsRegisteredAsync(studentId, courseId))
+        try
         {
-            throw new DuplicateException("Student is already registered for this course");
-        }
+            _unitOfWork.BeginTransaction();
 
-        // Check if course exists and is active
-        var course = await _courseRepository.GetByIdAsync(courseId);
-        if (course == null)
-        {
-            throw new NotFoundException("Course not found");
-        }
-
-        if (!course.IsActive)
-        {
-            throw new BusinessException("Course is not active");
-        }
-
-        // Check capacity if MaxCapacity is set
-        if (course.MaxCapacity.HasValue)
-        {
-            var currentCount = await _registrationRepository.GetRegistrationCountAsync(courseId);
-            if (currentCount >= course.MaxCapacity.Value)
+            // Check if already registered
+            if (await _unitOfWork.Registrations.IsRegisteredAsync(studentId, courseId))
             {
-                throw new BusinessException("Course has reached maximum capacity");
+                throw new DuplicateException("Student is already registered for this course");
             }
+
+            // Check if course exists and is active
+            var course = await _unitOfWork.Courses.GetByIdAsync(courseId);
+            if (course == null)
+            {
+                throw new NotFoundException("Course not found");
+            }
+
+            if (!course.IsActive)
+            {
+                throw new BusinessException("Course is not active");
+            }
+
+            // Check capacity if MaxCapacity is set
+            if (course.MaxCapacity.HasValue)
+            {
+                var currentCount = await _unitOfWork.Registrations.GetRegistrationCountAsync(courseId);
+                if (currentCount >= course.MaxCapacity.Value)
+                {
+                    throw new BusinessException("Course has reached maximum capacity");
+                }
+            }
+
+            var registration = new Registration
+            {
+                Id = TokenGenerator.GenerateToken(),
+                StudentId = studentId,
+                CourseId = courseId,
+                RegistrationDate = DateTimeHelper.UtcNow,
+                Status = RegistrationStatus.Registered,
+                IsActive = true,
+                CreatedAt = DateTimeHelper.UtcNow
+            };
+
+            var registrationId = await _unitOfWork.Registrations.CreateAsync(registration);
+            _unitOfWork.Commit();
+
+            _logger.LogInformation("Student {StudentId} registered for course {CourseId}", studentId, courseId);
+
+            return MapToDto(registration);
         }
-
-        var registration = new Registration
+        catch (Exception ex)
         {
-            Id = Guid.NewGuid().ToString(),
-            StudentId = studentId,
-            CourseId = courseId,
-            RegistrationDate = DateTime.UtcNow,
-            Status = "Registered",
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        var registrationId = await _registrationRepository.CreateAsync(registration);
-        return MapToDto(registration);
+            _unitOfWork.Rollback();
+            _logger.LogError(ex, "Failed to register student {StudentId} for course {CourseId}", studentId, courseId);
+            throw;
+        }
     }
 
     public async Task<bool> UnregisterAsync(string studentId, string courseId)
     {
-        // Check if registered
-        var existingRegistration = await _registrationRepository.GetByStudentIdAsync(studentId);
-        var registration = existingRegistration.FirstOrDefault(r => r.CourseId == courseId && r.IsActive);
-
-        if (registration == null)
+        try
         {
-            throw new NotFoundException("Registration not found");
-        }
+            _unitOfWork.BeginTransaction();
 
-        // Check if semester has started
-        var course = await _courseRepository.GetByIdAsync(courseId);
-        if (course == null)
+            // Check if registered
+            var existingRegistration = await _unitOfWork.Registrations.GetByStudentIdAsync(studentId);
+            var registration = existingRegistration.FirstOrDefault(r => r.CourseId == courseId && r.IsActive);
+
+            if (registration == null)
+            {
+                throw new NotFoundException("Registration not found");
+            }
+
+            // Check if semester has started
+            var course = await _unitOfWork.Courses.GetByIdAsync(courseId);
+            if (course == null)
+            {
+                throw new NotFoundException("Course not found");
+            }
+
+            if (DateTimeHelper.IsTodayOrPast(course.SemesterStartDate))
+            {
+                throw new BusinessException("Cannot unregister: Semester has already started");
+            }
+
+            // Update registration status to Dropped
+            registration.Status = RegistrationStatus.Dropped;
+            registration.IsActive = false;
+            registration.UpdatedAt = DateTimeHelper.UtcNow;
+
+            var result = await _unitOfWork.Registrations.UpdateAsync(registration);
+            _unitOfWork.Commit();
+
+            _logger.LogInformation("Student {StudentId} unregistered from course {CourseId}", studentId, courseId);
+
+            return result;
+        }
+        catch (Exception ex)
         {
-            throw new NotFoundException("Course not found");
+            _unitOfWork.Rollback();
+            _logger.LogError(ex, "Failed to unregister student {StudentId} from course {CourseId}", studentId, courseId);
+            throw;
         }
-
-        if (course.SemesterStartDate.HasValue && course.SemesterStartDate.Value <= DateTime.Today)
-        {
-            throw new BusinessException("Cannot unregister: Semester has already started");
-        }
-
-        // Update registration status to Dropped
-        registration.Status = "Dropped";
-        registration.IsActive = false;
-        registration.UpdatedAt = DateTime.UtcNow;
-
-        return await _registrationRepository.UpdateAsync(registration);
     }
 
     public async Task<bool> IsRegisteredAsync(string studentId, string courseId)
     {
-        return await _registrationRepository.IsRegisteredAsync(studentId, courseId);
+        return await _unitOfWork.Registrations.IsRegisteredAsync(studentId, courseId);
     }
 
     private static RegistrationDto MapToDto(Registration registration)
@@ -124,7 +156,7 @@ public class RegistrationService : IRegistrationService
             StudentId = registration.StudentId,
             CourseId = registration.CourseId,
             RegistrationDate = registration.RegistrationDate,
-            Status = registration.Status,
+            Status = registration.Status.ToString(),
             IsActive = registration.IsActive,
             CreatedAt = registration.CreatedAt,
             UpdatedAt = registration.UpdatedAt

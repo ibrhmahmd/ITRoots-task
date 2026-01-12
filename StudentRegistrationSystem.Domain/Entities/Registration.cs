@@ -1,4 +1,5 @@
 ﻿using System;
+using StudentRegistrationSystem.Domain.Enums;
 
 namespace StudentRegistrationSystem.Domain.Entities;
 
@@ -9,12 +10,10 @@ public class Registration : BaseEntity
     public string CourseId { get; set; } = string.Empty;
 
     public DateTime RegistrationDate { get; set; }
-
-    public string Status { get; set; } = "Registered";
-
+    public RegistrationStatus Status { get; set; }
     public bool IsActive { get; set; }
 
-    // Navigation properties (optional, for ORM scenarios)
+    // Navigation properties (for ORM scenarios)
     public Student? Student { get; set; }
 
     public Course? Course { get; set; }
